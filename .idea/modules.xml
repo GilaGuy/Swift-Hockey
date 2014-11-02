@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Air-Hockey-App.iml" filepath="$PROJECT_DIR$/Air-Hockey-App.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AirHockeyApp.iml" filepath="$PROJECT_DIR$/AirHockeyApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AirHockey.iml" filepath="$PROJECT_DIR$/AirHockey.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
