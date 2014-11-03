@@ -17,10 +17,6 @@ import android.view.View;
  */
 public class HockeyArena extends View  {
 
-
-    final int PADDLE = 1;
-    final int PUCK = 2;
-
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
     private Bitmap paddle;                      // First Paddle img
     private Bitmap puck;                        // Puck img
