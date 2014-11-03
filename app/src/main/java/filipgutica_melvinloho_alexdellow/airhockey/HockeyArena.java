@@ -202,9 +202,7 @@ public class HockeyArena extends View  {
         invalidate();
     }
 
-    public void detectWallCollisions(Ball b, Canvas c) {
-
-        Canvas canvas = c;
+    public void detectWallCollisions(Ball b, Canvas canvas) {
 
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
