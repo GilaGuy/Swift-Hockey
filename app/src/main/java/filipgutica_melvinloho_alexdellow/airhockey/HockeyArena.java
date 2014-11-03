@@ -45,6 +45,7 @@ public class HockeyArena extends View  {
     }
 
     public void commonConstructor() {
+        cleanUp();
 
       // mPaint.setColor(Color.BLUE);
         paddle = BitmapFactory.decodeResource(getResources(),R.drawable.blue_paddle);
@@ -59,6 +60,11 @@ public class HockeyArena extends View  {
         paddleBall2 = new Ball(paddle2, 200f, 500f, (int)(paddleHeight)/2);
         paddleBall = new Ball(paddle, 400f, 700f, (int) (paddleHeight/2));
         puckBall = new Ball(puck, 500f, 800f, (int)(puckWidth/2) );
+    }
+
+    public void cleanUp() {
+        paddleBall = paddleBall2 = puckBall = null;
+        Ball.balls.clear();
     }
 
     @Override
