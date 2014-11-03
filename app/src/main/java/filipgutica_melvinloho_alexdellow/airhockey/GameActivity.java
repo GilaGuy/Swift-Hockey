@@ -4,20 +4,25 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 
 public class GameActivity extends Activity {
 
-    View hockeyArena;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HockeyArena hArena = new HockeyArena(this);
+        setContentView(hArena);
 
-        hockeyArena = findViewById(R.id.arena);
-        setContentView(hockeyArena);
+    }
 
+    @Override
+    public void onBackPressed() {
+        
+        super.onDestroy();
+        super.onBackPressed();
     }
 
 

@@ -1,9 +1,11 @@
 package filipgutica_melvinloho_alexdellow.airhockey;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends Activity {
@@ -11,9 +13,22 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_main);
     }
 
+    public void onClickTwoPlayer(View v)
+    {
+        Intent intent = new Intent(this, GameActivity.class);
+
+        startActivity(intent);
+
+    }
+
+    public void onClickMultiPlay(View v) {
+        Intent intent = new Intent(this, WiFiServiceDiscoveryActivity.class);
+
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
