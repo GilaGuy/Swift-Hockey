@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ import java.util.Map;
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class WiFiServiceDiscoveryActivity extends Activity implements
-        WifiP2pManager.ConnectionInfoListener {
+        WifiP2pManager.ConnectionInfoListener, WiFiDirectServicesList.DeviceClickListener {
 
     public static final String TAG = "wifidirectdemo";
 
@@ -239,6 +240,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
                         @Override
                         public void onSuccess() {
+
                         }
 
                         @Override
@@ -276,6 +278,19 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
+
+
+
+        if (p2pInfo.isGroupOwner) {
+            Log.d(TAG, "Connected as group owner");
+            Toast.makeText(getApplicationContext(), "OWNER", Toast.LENGTH_SHORT).show();
+
+
+        } else {
+            Log.d(TAG, "Connected as peer");
+            Toast.makeText(getApplicationContext(), "Peer", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
