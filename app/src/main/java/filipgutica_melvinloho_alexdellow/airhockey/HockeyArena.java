@@ -192,41 +192,36 @@ public class HockeyArena extends View  {
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
         for (Ball b : Ball.balls) detectWallCollisions(b, canvas);
-        /*Only if balls touch walls*/
-        //detectWallCollisions(paddleBall, canvas);
-        //detectWallCollisions(paddleBall2, canvas);
-        //detectWallCollisions(puckBall, canvas);
 
         invalidate();
     }
 
     public void detectWallCollisions(Ball b, Canvas c) {
 
-        Ball paddleBall = b;
         Canvas canvas = c;
 
         //when paddle hits left wall
-        if (paddleBall.x < 0 + paddleWidth/2) {
-            paddleBall.speed_x = Math.abs(paddleBall.speed_x);
-            paddleBall.x = 0 + paddleHeight/2 ;
+        if (b.x < 0 + b.ballRadius/2) {
+            b.speed_x = Math.abs(b.speed_x);
+            b.x = 0 + b.ballRadius/2 ;
 
             //when paddle hits right wall
-        } else if ( paddleBall.x >= canvas.getWidth()- paddleWidth/2) {
+        } else if ( b.x > canvas.getWidth()- b.ballRadius/2) {
 
-            paddleBall.speed_x= -Math.abs(paddleBall.speed_x);
-            paddleBall.x = canvas.getWidth() - paddleWidth/2;
+            b.speed_x= -Math.abs(b.speed_x);
+            b.x = canvas.getWidth() - b.ballRadius/2;
         }
         //paddle hits top wall
-        if (paddleBall.y < /*&canvas.getHeight()/2*/ 0 + paddleHeight/2) {
+        if (b.y < 0 + b.ballRadius/2) {
 
-            paddleBall.speed_y = Math.abs(paddleBall.speed_y);
-            paddleBall.y = 0 + paddleHeight/2;
+            b.speed_y = Math.abs(b.speed_y);
+            b.y = 0 + b.ballRadius/2;
 
             //paddle hits bottom wall
-        } else if (paddleBall.y > canvas.getHeight() - paddleHeight/2) {
+        } else if (b.y > canvas.getHeight() - b.ballRadius/2) {
 
-            paddleBall.speed_y = -Math.abs(paddleBall.speed_y);
-            paddleBall.y = canvas.getHeight() - paddleHeight/2;
+            b.speed_y = -Math.abs(b.speed_y);
+            b.y = canvas.getHeight() - b.ballRadius/2;
         }
 
     }

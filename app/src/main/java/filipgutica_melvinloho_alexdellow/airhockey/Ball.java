@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Ball {
 
-    float frictionFactor = 1.00001f;
+    float frictionFactor = .99f;
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
 
@@ -20,7 +20,7 @@ public class Ball {
     float y;
     float speed_x;
     float speed_y;
-    public int ballRadius;
+    public float ballRadius;
     Bitmap curBall;
 
     public Ball( Bitmap img, float xPos, float yPos, int rad)
