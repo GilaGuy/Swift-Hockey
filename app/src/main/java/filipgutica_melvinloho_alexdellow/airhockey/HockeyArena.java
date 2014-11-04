@@ -163,6 +163,7 @@ public class HockeyArena extends View  {
                             paddleBall.speed_x = velocity.getXVelocity(i);
                             paddleBall.speed_y = velocity.getYVelocity(i);
                             paddleBall.detectCollisions();
+                            detectWallCollisions(paddleBall);
                         }
                     }
                     else if (m.getY(i) < screenHeight/2 - paddleHeight/2)
@@ -175,6 +176,7 @@ public class HockeyArena extends View  {
                             paddleBall2.speed_x = velocity2.getXVelocity(i);
                             paddleBall2.speed_y = velocity2.getYVelocity(i);
                             paddleBall2.detectCollisions();
+                            detectWallCollisions(paddleBall2);
                         }
                     }
                 }
