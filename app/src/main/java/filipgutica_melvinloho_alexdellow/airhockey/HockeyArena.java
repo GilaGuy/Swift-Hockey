@@ -66,11 +66,6 @@ public class HockeyArena extends View  {
         screenWidth = size.x;
         screenHeight = size.y;
 
-        goalCountBot = 0;
-        goalCountTop = 0;
-        scored = false;
-
-        // mPaint.setColor(Color.BLUE);
         paddle = BitmapFactory.decodeResource(getResources(),R.drawable.blue_paddle);
         paddle2 = BitmapFactory.decodeResource(getResources(), R.drawable.green_paddle);
         puck = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
@@ -88,30 +83,24 @@ public class HockeyArena extends View  {
     public void cleanUp() {
         paddleBall = paddleBall2 = puckBall = null;
         paddle = paddle2 = puck = null;
+        velocity = velocity2 = null;
         Ball.balls.clear();
+
+        goalCountBot = 0;
+        goalCountTop = 0;
+        scored = false;
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent m) {
-
-        int action = m.getActionMasked();
-        int index = m.getActionIndex();
-        int id;
-
-        if (index > 0) {
-            paddleBall2.x = m.getX(index);
-            paddleBall2.y = m.getY(index);
-        }
-        switch (action) {
+    public boolean onTouchEvent(MotionEvent m)
+    {
+        switch (m.getActionMasked())
+        {
             case MotionEvent.ACTION_DOWN:
-                // Get the number of pointers
-                int pointerCount = m.getPointerCount();
-
-                for (int i = 0; i < pointerCount; i ++) {
-                    // Get the pointer ids
-                    id = m.getPointerId(i);
-                    // First Pointer
-                    if (id == 0 && m.getY(i) > screenHeight/2) {
+                for (int i = 0; i < m.getPointerCount(); ++i)
+                {
+                    if (m.getY(i) > screenHeight/2)
+                    {
                         paddleBall.x = m.getX(i);
                         paddleBall.y = m.getY(i);
                         paddleBall.speed_x = 0;
@@ -126,12 +115,13 @@ public class HockeyArena extends View  {
                             velocity.clear();
                             velocity2.clear();
                         }
+
                         // Add a user's movement to the tracker.
                         velocity.addMovement(m);
                         velocity2.addMovement(m);
                     }
-                    // Second pointer
-                    else if (id == 1 && m.getY(i) < screenHeight/2) {
+                    else if (m.getY(i) < screenHeight/2)
+                    {
                         paddleBall2.x = m.getX(i);
                         paddleBall2.y = m.getY(i);
                         paddleBall2.speed_x = 0;
@@ -144,19 +134,18 @@ public class HockeyArena extends View  {
                             velocity.clear();
                             velocity2.clear();
                         }
+
                         velocity.addMovement(m);
                         velocity2.addMovement(m);
                     }
                 }
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                //Number of pointers
-                int pointerCount2 = m.getPointerCount();
-
-                for (int i = 0; i < pointerCount2; i++){
-                    id = m.getPointerId(i);
-                    if (id == 0 && m.getY(i) > screenHeight/2 + paddleHeight/2) {
-
+                for (int i = 0; i < m.getPointerCount(); ++i)
+                {
+                    if (m.getY(i) > screenHeight/2 + paddleHeight/2)
+                    {
                         paddleBall.x = m.getX(i);
                         paddleBall.y = m.getY(i);
                         //Add movement to tracker
@@ -168,8 +157,8 @@ public class HockeyArena extends View  {
                         paddleBall.speed_x = velocity.getXVelocity(i);
                         paddleBall.speed_y = velocity.getYVelocity(i);
                     }
-                    if (id == 1 && m.getY(i) < screenHeight/2 - paddleHeight/2) {
-
+                    else if (m.getY(i) < screenHeight/2 - paddleHeight/2)
+                    {
                         paddleBall2.x = m.getX(i);
                         paddleBall2.y = m.getY(i);
                         velocity2.addMovement(m);
@@ -179,15 +168,17 @@ public class HockeyArena extends View  {
                     }
                 }
                 break;
+
             case MotionEvent.ACTION_UP:
-
                 break;
+
             case MotionEvent.ACTION_POINTER_UP:
-
                 break;
+
             case MotionEvent.ACTION_CANCEL:
                 // Return a VelocityTracker object back to be re-used by others.
                 velocity.recycle();
+                velocity2.recycle();
                 break;
         }
 
