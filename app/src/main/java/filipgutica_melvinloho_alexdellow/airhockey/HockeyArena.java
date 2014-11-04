@@ -219,11 +219,7 @@ public class HockeyArena extends View  {
         canvas.drawArc(rectFbot, 180, 360, true, mPaint);
 
         mPaint.setColor(Color.BLACK);
-        //mPaint.setTextSize(100f);
         mPaint.setStrokeWidth(3f);
-
-        //canvas.drawText(String.valueOf(goalCountTop), screenWidth /2 - 40f, 0 + 100f, mPaint);
-        //canvas.drawText(String.valueOf(goalCountBot), screenWidth /2 - 40f, screenHeight - 20f, mPaint);
 
         GameActivity.scoreTop.setText(String.valueOf(goalCountTop));
         GameActivity.scoreBot.setText(String.valueOf(goalCountBot));
@@ -289,7 +285,8 @@ public class HockeyArena extends View  {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
             }
-            else {
+            else
+            {
                 //Goal scored
                 goalCountBot++;
                 scored = true;
