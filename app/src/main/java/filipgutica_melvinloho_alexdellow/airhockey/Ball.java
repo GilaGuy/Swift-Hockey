@@ -22,8 +22,13 @@ public class Ball {
     float speed_y;
     public float ballRadius;
     Bitmap curBall;
+    enum type {
+        puck, paddle
+    };
 
-    public Ball( Bitmap img, float xPos, float yPos, int rad)
+    type bType;
+
+    public Ball( Bitmap img, float xPos, float yPos, int rad, type t)
     {
         speed_x = 0;
         speed_y = 0;
@@ -31,9 +36,14 @@ public class Ball {
         y = yPos;
         ballRadius = rad;
         curBall = img;
-
         balls.add(this);
 
+        bType = t;
+
+    }
+
+    public type getType() {
+        return bType;
     }
 
     public Bitmap getBitmap() {

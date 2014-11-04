@@ -231,6 +231,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void connectP2p(WiFiP2pService service) {
+
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -283,11 +284,13 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
+            appendStatus("Connected as group owner");
             Toast.makeText(getApplicationContext(), "OWNER", Toast.LENGTH_SHORT).show();
 
 
         } else {
             Log.d(TAG, "Connected as peer");
+            appendStatus("Connected as peer");
             Toast.makeText(getApplicationContext(), "Peer", Toast.LENGTH_SHORT).show();
         }
 
