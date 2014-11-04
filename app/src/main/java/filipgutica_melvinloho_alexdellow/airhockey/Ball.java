@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Ball {
 
-    float frictionFactor = .99f;
+    float frictionFactor = .98f;
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
 

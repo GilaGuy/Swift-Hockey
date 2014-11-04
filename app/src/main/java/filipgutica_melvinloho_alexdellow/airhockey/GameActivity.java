@@ -4,27 +4,28 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class GameActivity extends Activity {
 
-
+    public static TextView scoreTop, scoreBot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HockeyArena hArena = new HockeyArena(this);
-        setContentView(hArena);
 
+        setContentView(R.layout.activity_game);
+
+        scoreTop = (TextView) findViewById(R.id.scoreTopTxt);
+        scoreBot = (TextView) findViewById(R.id.scoreBotTxt);
     }
 
     @Override
     public void onBackPressed() {
-        
         super.onDestroy();
         super.onBackPressed();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

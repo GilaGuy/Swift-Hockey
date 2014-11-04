@@ -10,7 +10,6 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -43,12 +42,10 @@ public class HockeyArena extends View  {
     private int goalCountTop;
     private int goalCountBot;
 
-
     private int screenWidth;
     private int screenHeight;
 
     boolean scored;
-
 
     public HockeyArena(Context context) {
         super(context);
@@ -61,7 +58,7 @@ public class HockeyArena extends View  {
 
     public void commonConstructor() {
         cleanUp();
-
+        
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -73,7 +70,7 @@ public class HockeyArena extends View  {
         goalCountTop = 0;
         scored = false;
 
-      // mPaint.setColor(Color.BLUE);
+        // mPaint.setColor(Color.BLUE);
         paddle = BitmapFactory.decodeResource(getResources(),R.drawable.blue_paddle);
         paddle2 = BitmapFactory.decodeResource(getResources(), R.drawable.green_paddle);
         puck = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
@@ -85,11 +82,12 @@ public class HockeyArena extends View  {
 
         paddleBall2 = new Ball(paddle2, screenWidth/2, screenHeight * 1/3, (int)(paddleHeight)/2, Ball.type.paddle);
         paddleBall = new Ball(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball.type.paddle);
-        puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck );
+        puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck);
     }
 
     public void cleanUp() {
         paddleBall = paddleBall2 = puckBall = null;
+        paddle = paddle2 = puck = null;
         Ball.balls.clear();
     }
 
@@ -101,7 +99,6 @@ public class HockeyArena extends View  {
         int id;
 
         if (index > 0) {
-            Log.d("", "MULTITOUCH");
             paddleBall2.x = m.getX(index);
             paddleBall2.y = m.getY(index);
         }
@@ -197,7 +194,6 @@ public class HockeyArena extends View  {
         return true;
     }
 
-
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -210,49 +206,50 @@ public class HockeyArena extends View  {
         mPaint.setAntiAlias(true);
 
         mPaint.setStrokeWidth(5f);
-        canvas.drawLine(0, canvas.getHeight()/2, canvas.getWidth(), canvas.getHeight()/2, mPaint);
+        canvas.drawLine(0, screenHeight/2, screenWidth, screenHeight/2, mPaint);
 
         mPaint.setColor(Color.RED);
         mPaint.setStrokeWidth(20f);
-        canvas.drawLine(canvas.getWidth() / 3, 1, canvas.getWidth() * 2 / 3, 1, mPaint);
-        canvas.drawLine(canvas.getWidth() /3, canvas.getHeight() - 1, canvas.getWidth() * 2/3, canvas.getHeight() - 1, mPaint);
+        canvas.drawLine(screenWidth / 3, 1, screenWidth * 2 / 3, 1, mPaint);
+        canvas.drawLine(screenWidth /3, screenHeight - 1, screenWidth * 2/3, screenHeight - 1, mPaint);
 
-        RectF rectFTop = new RectF(canvas.getWidth() / 3, -(canvas.getHeight() /8), canvas.getWidth() * 2 / 3, canvas.getHeight() /8);
-        RectF rectFbot = new RectF(canvas.getWidth() / 3, canvas.getHeight() - (canvas.getHeight() /8), canvas.getWidth() * 2 / 3, canvas.getHeight() + (canvas.getHeight() /8));
+        RectF rectFTop = new RectF(screenWidth / 3, -(screenHeight /8), screenWidth * 2 / 3, screenHeight /8);
+        RectF rectFbot = new RectF(screenWidth / 3, screenHeight - (screenHeight /8), screenWidth * 2 / 3, screenHeight + (screenHeight /8));
         canvas.drawArc(rectFTop, 0, 180, true, mPaint);
         canvas.drawArc(rectFbot, 180, 360, true, mPaint);
 
         mPaint.setColor(Color.BLACK);
-        mPaint.setTextSize(100f);
+        //mPaint.setTextSize(100f);
         mPaint.setStrokeWidth(3f);
 
-        canvas.drawText(String.valueOf(goalCountTop), canvas.getWidth() /2 - 40f, 0 + 100f, mPaint);
-        canvas.drawText(String.valueOf(goalCountBot), canvas.getWidth() /2 - 40f, canvas.getHeight() - 20f, mPaint);
+        //canvas.drawText(String.valueOf(goalCountTop), screenWidth /2 - 40f, 0 + 100f, mPaint);
+        //canvas.drawText(String.valueOf(goalCountBot), screenWidth /2 - 40f, screenHeight - 20f, mPaint);
+
+        GameActivity.scoreTop.setText(String.valueOf(goalCountTop));
+        GameActivity.scoreBot.setText(String.valueOf(goalCountBot));
 
         canvas.drawBitmap(puckBall.getBitmap(), puckBall.x - puckWidth/2, puckBall.y - puckWidth/2, mPaint);
         canvas.drawBitmap(paddleBall2.getBitmap(), paddleBall2.x - paddleWidth / 2, paddleBall2.y - paddleWidth / 2, mPaint);
         canvas.drawBitmap(paddleBall.getBitmap(), paddleBall.x - paddleWidth / 2, paddleBall.y - paddleWidth / 2, mPaint);
 
-        if (paddleBall.y < canvas.getHeight()/2 + paddleHeight/2) {
-            paddleBall.y = canvas.getHeight() / 2 + paddleHeight / 2;
+        if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
+            paddleBall.y = screenHeight / 2 + paddleHeight / 2;
             paddleBall.speed_y = Math.abs(paddleBall.speed_y);
         }
 
-        if (paddleBall2.y > canvas.getHeight()/2 - paddleHeight/2) {
-            paddleBall2.y = canvas.getHeight() / 2 - paddleHeight / 2;
+        if (paddleBall2.y > screenHeight/2 - paddleHeight/2) {
+            paddleBall2.y = screenHeight / 2 - paddleHeight / 2;
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
-        detectWallCollisions(paddleBall, canvas);
-        detectWallCollisions(paddleBall2, canvas);
+        detectWallCollisions(paddleBall);
+        detectWallCollisions(paddleBall2);
 
         if (!scored) {
-            detectWallCollisions(puckBall, canvas);
+            detectWallCollisions(puckBall);
         }
-
-
 
         if (goalCountBot >= 10 || goalCountTop >= 10) {
             Handler handler = new Handler();
@@ -262,24 +259,23 @@ public class HockeyArena extends View  {
                     commonConstructor();
                 }
             }, 2000);
-
         }
 
         invalidate();
     }
 
-    public void detectWallCollisions(final Ball b, final Canvas canvas) {
+    public void detectWallCollisions(final Ball b) {
 
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
             b.speed_x = Math.abs(b.speed_x);
             b.x = 0 + b.ballRadius/2 ;
 
-            //when paddle hits right wall
-        } else if ( b.x > canvas.getWidth()- b.ballRadius/2) {
+        //when paddle hits right wall
+        } else if ( b.x > getWidth()- b.ballRadius/2) {
 
             b.speed_x= -Math.abs(b.speed_x);
-            b.x = canvas.getWidth() - b.ballRadius/2;
+            b.x = getWidth() - b.ballRadius/2;
         }
         //paddle hits top wall
         if (b.y < 0 + b.ballRadius/2) {
@@ -289,7 +285,7 @@ public class HockeyArena extends View  {
                 b.y = 0 + b.ballRadius / 2;
             }
 
-            else if (b.x < canvas.getWidth() /3 || b.x > canvas.getWidth() * 2/3 && b.getType() == Ball.type.puck) {
+            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
             }
@@ -299,41 +295,38 @@ public class HockeyArena extends View  {
                 scored = true;
                 b.speed_x = 0;
                 b.speed_y = 0;
-                b.x = canvas.getWidth() + 100;
-                b.y = canvas.getHeight();
+                b.x = getWidth() * 2;
+                b.y = getHeight() * 2;
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        b.x = canvas.getWidth()/2;
-                        b.y = canvas.getHeight()/5;
+                        b.x = getWidth()/2;
+                        b.y = getHeight() * 1/5;
                         scored = false;
                     }
                 }, 2000);
-
-
-
             }
 
-            //paddle hits bottom wall
-        } else if (b.y > canvas.getHeight() - b.ballRadius/2) {
+        //paddle hits bottom wall
+        } else if (b.y > getHeight() - b.ballRadius/2) {
 
             if (b.getType() == Ball.type.paddle) {
                 b.speed_y = -Math.abs(b.speed_y);
-                b.y = canvas.getHeight() - b.ballRadius / 2;
+                b.y = getHeight() - b.ballRadius / 2;
             }
-            else if (b.x < canvas.getWidth() /3 || b.x > canvas.getWidth() * 2/3 && b.getType() == Ball.type.puck) {
+            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = -Math.abs(b.speed_y);
-                b.y = canvas.getHeight() - b.ballRadius / 2;
+                b.y = getHeight() - b.ballRadius / 2;
             }
             else
             {
                 //Goal scored
                 goalCountTop++;
                 scored = true;
-                b.x = canvas.getWidth() + 100;
-                b.y = canvas.getHeight();
+                b.x = getWidth() + 100;
+                b.y = getHeight();
                 b.speed_x = 0;
                 b.speed_y = 0;
 
@@ -341,8 +334,8 @@ public class HockeyArena extends View  {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        b.x = canvas.getWidth()/2;
-                        b.y = canvas.getHeight() * 4/5;
+                        b.x = getWidth()/2;
+                        b.y = getHeight() * 4/5;
                         scored = false;
                     }
                 }, 2000);
