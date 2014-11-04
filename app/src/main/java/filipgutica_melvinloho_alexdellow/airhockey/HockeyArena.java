@@ -213,8 +213,8 @@ public class HockeyArena extends View  {
         canvas.drawLine(screenWidth / 3, 1, screenWidth * 2 / 3, 1, mPaint);
         canvas.drawLine(screenWidth /3, screenHeight - 1, screenWidth * 2/3, screenHeight - 1, mPaint);
 
-        RectF rectFTop = new RectF(screenWidth / 3, -(screenHeight /8), screenWidth * 2 / 3, screenHeight /8);
-        RectF rectFbot = new RectF(screenWidth / 3, screenHeight - (screenHeight /8), screenWidth * 2 / 3, screenHeight + (screenHeight /8));
+        RectF rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
+        RectF rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
         canvas.drawArc(rectFTop, 0, 180, true, mPaint);
         canvas.drawArc(rectFbot, 180, 360, true, mPaint);
 
@@ -225,8 +225,8 @@ public class HockeyArena extends View  {
         GameActivity.scoreBot.setText(String.valueOf(goalCountBot));
 
         canvas.drawBitmap(puckBall.getBitmap(), puckBall.x - puckWidth/2, puckBall.y - puckWidth/2, mPaint);
-        canvas.drawBitmap(paddleBall2.getBitmap(), paddleBall2.x - paddleWidth / 2, paddleBall2.y - paddleWidth / 2, mPaint);
-        canvas.drawBitmap(paddleBall.getBitmap(), paddleBall.x - paddleWidth / 2, paddleBall.y - paddleWidth / 2, mPaint);
+        canvas.drawBitmap(paddleBall2.getBitmap(), paddleBall2.x - paddleWidth / 2, paddleBall2.y - paddleHeight / 2, mPaint);
+        canvas.drawBitmap(paddleBall.getBitmap(), paddleBall.x - paddleWidth / 2, paddleBall.y - paddleHeight / 2, mPaint);
 
         if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
             paddleBall.y = screenHeight / 2 + paddleHeight / 2;
