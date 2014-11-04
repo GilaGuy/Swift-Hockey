@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
@@ -69,6 +70,10 @@ public class HockeyArena extends View  {
         paddle = BitmapFactory.decodeResource(getResources(),R.drawable.blue_paddle);
         paddle2 = BitmapFactory.decodeResource(getResources(), R.drawable.green_paddle);
         puck = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
+
+        paddle = getResizedBitmap(paddle, screenWidth/7, screenWidth/7);
+        paddle2 = getResizedBitmap(paddle2, screenWidth/7, screenWidth/7);
+        puck = getResizedBitmap(puck, screenWidth/15, screenWidth/15);
 
         paddleWidth = paddle.getWidth();
         paddleHeight = paddle.getHeight();
@@ -149,36 +154,46 @@ public class HockeyArena extends View  {
                         paddleBall.x = m.getX(i);
                         paddleBall.y = m.getY(i);
                         //Add movement to tracker
-                        velocity.addMovement(m);
-                        // When you want to determine the velocity, call
-                        // computeCurrentVelocity(). Then call getXVelocity()
-                        // and getYVelocity() to retrieve the velocity in pixels/10ms
-                        velocity.computeCurrentVelocity(10);
-                        paddleBall.speed_x = velocity.getXVelocity(i);
-                        paddleBall.speed_y = velocity.getYVelocity(i);
+                        if (velocity != null) {
+                            velocity.addMovement(m);
+                            // When you want to determine the velocity, call
+                            // computeCurrentVelocity(). Then call getXVelocity()
+                            // and getYVelocity() to retrieve the velocity in pixels/10ms
+                            velocity.computeCurrentVelocity(10);
+                            paddleBall.speed_x = velocity.getXVelocity(i);
+                            paddleBall.speed_y = velocity.getYVelocity(i);
+                            paddleBall.detectCollisions();
+                        }
                     }
                     else if (m.getY(i) < screenHeight/2 - paddleHeight/2)
                     {
                         paddleBall2.x = m.getX(i);
                         paddleBall2.y = m.getY(i);
-                        velocity2.addMovement(m);
-                        velocity2.computeCurrentVelocity(10);
-                        paddleBall2.speed_x = velocity2.getXVelocity(i);
-                        paddleBall2.speed_y = velocity2.getYVelocity(i);
+                        if (velocity2 != null) {
+                            velocity2.addMovement(m);
+                            velocity2.computeCurrentVelocity(10);
+                            paddleBall2.speed_x = velocity2.getXVelocity(i);
+                            paddleBall2.speed_y = velocity2.getYVelocity(i);
+                            paddleBall2.detectCollisions();
+                        }
                     }
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
+                clearVelocities(paddleBall);
+                clearVelocities(paddleBall2);
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
+                clearVelocities(paddleBall);
+                clearVelocities(paddleBall2);
                 break;
 
             case MotionEvent.ACTION_CANCEL:
                 // Return a VelocityTracker object back to be re-used by others.
-                velocity.recycle();
-                velocity2.recycle();
+                //velocity.recycle();
+               // velocity2.recycle();
                 break;
         }
 
@@ -238,7 +253,7 @@ public class HockeyArena extends View  {
             detectWallCollisions(puckBall);
         }
 
-        if (goalCountBot >= 10 || goalCountTop >= 10) {
+        if (goalCountBot >= 5 || goalCountTop >= 5) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -330,6 +345,27 @@ public class HockeyArena extends View  {
             }
         }
 
+    }
+
+
+    void clearVelocities(Ball b) {
+        b.speed_y = 0;
+        b.speed_x = 0;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
 
 }
