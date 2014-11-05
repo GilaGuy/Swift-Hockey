@@ -51,6 +51,8 @@ public class HockeyArena extends View  {
     private int screenWidth;
     private int screenHeight;
 
+    Handler handler = new Handler();
+
     boolean scored;
 
     private Random rand = new Random();
@@ -260,10 +262,10 @@ public class HockeyArena extends View  {
                         // paddleBall2.x = puckBall.x;
 
                         if (getDistanceX(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
-                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall)/2  ;
+                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall)  ;
                             //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
                         } else if (getDistanceX(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
-                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall)/2;
+                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall);
                             //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
                         }
 
@@ -299,12 +301,14 @@ public class HockeyArena extends View  {
         }
         else {
 
+            paddleBall2.y--;
+
 
         }
 
 
 
-  
+
 
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
@@ -316,7 +320,7 @@ public class HockeyArena extends View  {
         }
 
         if (goalCountBot >= 5 || goalCountTop >= 5) {
-            Handler handler = new Handler();
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -367,8 +371,8 @@ public class HockeyArena extends View  {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        b.x = getWidth()/2;
-                        b.y = getHeight() * 1/5;
+                        resetPositions();
+                        b.y = b.y - screenHeight/8;
                         scored = false;
                     }
                 }, 2000);
@@ -399,8 +403,8 @@ public class HockeyArena extends View  {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        b.x = getWidth()/2;
-                        b.y = getHeight() * 4/5;
+                        resetPositions();
+                        b.y = b.y + screenHeight/8;
                         scored = false;
                     }
                 }, 2000);
