@@ -17,10 +17,15 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.util.Random;
+
 /**
  * Created by Filip on 2014-09-15.
  */
 public class HockeyArena extends View  {
+
+    private final float SPEED_FACTORE_POS = 1.05f;
+    private final float SPEED_FACTOR_NEG = -1.05f;
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -48,6 +53,8 @@ public class HockeyArena extends View  {
 
     boolean scored;
 
+    private Random rand = new Random();
+
     public HockeyArena(Context context) {
         super(context);
         commonConstructor();
@@ -67,8 +74,8 @@ public class HockeyArena extends View  {
         screenWidth = size.x;
         screenHeight = size.y;
 
-        paddle = BitmapFactory.decodeResource(getResources(),R.drawable.blue_paddle);
-        paddle2 = BitmapFactory.decodeResource(getResources(), R.drawable.green_paddle);
+        paddle = BitmapFactory.decodeResource(getResources(),R.drawable.funny);
+        paddle2 = BitmapFactory.decodeResource(getResources(), R.drawable.funny2);
         puck = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
 
         paddle = getResizedBitmap(paddle, screenWidth/7, screenWidth/7);
@@ -183,13 +190,13 @@ public class HockeyArena extends View  {
                 break;
 
             case MotionEvent.ACTION_UP:
-                clearVelocities(paddleBall);
-                clearVelocities(paddleBall2);
+              //  clearVelocities(paddleBall);
+              //  clearVelocities(paddleBall2);
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
-                clearVelocities(paddleBall);
-                clearVelocities(paddleBall2);
+               // clearVelocities(paddleBall);
+               // clearVelocities(paddleBall2);
                 break;
 
             case MotionEvent.ACTION_CANCEL:
@@ -203,7 +210,7 @@ public class HockeyArena extends View  {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
+    public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
 
         mPaint.setColor(Color.BLUE);
@@ -246,6 +253,59 @@ public class HockeyArena extends View  {
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
+        if (!scored && puckBall.y < canvas.getHeight()/2 ){
+
+
+
+                        // paddleBall2.x = puckBall.x;
+
+                        if (getDistanceX(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
+                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall)/2  ;
+                            //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
+                        } else if (getDistanceX(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
+                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall)/2;
+                            //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
+                        }
+
+                        if (paddleBall2.speed_x > 50)
+                            paddleBall2.speed_x = 50;
+                        else if (paddleBall2.speed_x < -50)
+                            paddleBall2.speed_x = -50;
+
+
+                        if (getDistanceY(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
+                            paddleBall2.speed_y = -getDistanceY(paddleBall2, puckBall) /2 ;
+                            //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
+                        } else if (getDistanceY(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
+                            paddleBall2.speed_y = -getDistanceY(paddleBall2, puckBall)/2 ;
+                            //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
+                        }
+
+                        if (paddleBall2.speed_y > 50)
+                            paddleBall2.speed_y = 50;
+                        else if (paddleBall2.speed_y < -50)
+                            paddleBall2.speed_y = -50;
+
+                        paddleBall2.detectCollisions();
+
+
+                        if (Math.abs(getDistanceX(paddleBall2, puckBall)) < 10 && Math.abs(getDistanceY(paddleBall2, puckBall)) < 10
+                                || paddleBall2.y > puckBall.y) {
+
+                            paddleBall2.speed_y *= 1.02  ;
+                            paddleBall2.speed_x *= 1.02 ;
+                        }
+
+        }
+        else {
+
+
+        }
+
+
+
+  
+
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
         detectWallCollisions(paddleBall);
@@ -260,7 +320,7 @@ public class HockeyArena extends View  {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    commonConstructor();
+                    resetPositions();
                 }
             }, 2000);
         }
@@ -293,7 +353,7 @@ public class HockeyArena extends View  {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
             }
-            else
+            else if (b.y < 0 - b.ballRadius)
             {
                 //Goal scored
                 goalCountBot++;
@@ -325,7 +385,7 @@ public class HockeyArena extends View  {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
             }
-            else
+            else if (b.y > getHeight() + b.ballRadius)
             {
                 //Goal scored
                 goalCountTop++;
@@ -355,6 +415,18 @@ public class HockeyArena extends View  {
         b.speed_x = 0;
     }
 
+    void resetPositions() {
+        paddleBall2.x = screenWidth/2;
+        paddleBall2.y = screenHeight * 1/3;
+        paddleBall.x = screenWidth/2;
+        paddleBall.y =  screenHeight * 2/3;
+        puckBall.x = screenWidth/2;
+        puckBall.y = screenHeight/2;
+
+        goalCountBot = 0;
+        goalCountTop = 0;
+    }
+
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -368,6 +440,14 @@ public class HockeyArena extends View  {
         // "RECREATE" THE NEW BITMAP
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
+    }
+
+    public float getDistanceX(Ball b1, Ball b2) {
+        return ( (b1.x)  - b2.x);
+    }
+
+    public float getDistanceY(Ball b1, Ball b2) {
+        return (b1.y - b2.y);
     }
 
 }

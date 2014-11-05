@@ -286,12 +286,14 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
             Log.d(TAG, "Connected as group owner");
             appendStatus("Connected as group owner");
             Toast.makeText(getApplicationContext(), "OWNER", Toast.LENGTH_SHORT).show();
+            // start new group owner socket handler
 
 
         } else {
             Log.d(TAG, "Connected as peer");
             appendStatus("Connected as peer");
             Toast.makeText(getApplicationContext(), "Peer", Toast.LENGTH_SHORT).show();
+            // start new client socket  handler
         }
 
 
