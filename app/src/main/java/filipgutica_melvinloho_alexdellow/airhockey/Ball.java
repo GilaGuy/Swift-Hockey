@@ -11,10 +11,13 @@ import java.util.ArrayList;
  */
 public class Ball {
 
-    float frictionFactor = .98f;
+    public static float FRICTION_FACTOR = .98f;
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
 
+    enum type {
+        puck, paddle
+    }
 
     float x;
     float y;
@@ -22,10 +25,6 @@ public class Ball {
     float speed_y;
     public float ballRadius;
     Bitmap curBall;
-    enum type {
-        puck, paddle
-    };
-
     type bType;
 
     public Ball( Bitmap img, float xPos, float yPos, int rad, type t)
@@ -59,8 +58,8 @@ public class Ball {
         if (y >= 200 - ballRadius && speed_y > 0) speed_y = Math.abs(speed_y);
         if (y <= ballRadius && speed_y < 0) speed_y = -Math.abs(speed_y);
 
-        speed_x *= frictionFactor;
-        speed_y *= frictionFactor;
+        speed_x *= FRICTION_FACTOR;
+        speed_y *= FRICTION_FACTOR;
     }
 
     public void detectCollisions() {

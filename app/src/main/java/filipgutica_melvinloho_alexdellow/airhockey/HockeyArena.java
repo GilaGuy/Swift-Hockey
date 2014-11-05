@@ -24,8 +24,8 @@ import java.util.Random;
  */
 public class HockeyArena extends View  {
 
-    private final float SPEED_FACTOR = 1.03f;
     private int SCORE_TO_WIN = 5;
+    private int DIFFICULTY = 5;
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -270,7 +270,14 @@ public class HockeyArena extends View  {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    resetPositions();
+                    puckBall.x = screenWidth/2;
+                    puckBall.y = screenHeight/2;
+
+                    paddleBall2.x = screenWidth/2;
+                    paddleBall2.y = screenHeight * 1/3;
+                    paddleBall.x = screenWidth/2;
+                    paddleBall.y =  screenHeight * 2/3;
+
                     goalCountBot = 0;
                     goalCountTop = 0;
                 }
@@ -319,8 +326,11 @@ public class HockeyArena extends View  {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        resetPositions();
+                        puckBall.x = screenWidth/2;
+                        puckBall.y = screenHeight/2;
+
                         b.y = b.y - screenHeight/8;
+
                         scored = false;
                     }
                 }, 2000);
@@ -351,8 +361,11 @@ public class HockeyArena extends View  {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        resetPositions();
+                        puckBall.x = screenWidth/2;
+                        puckBall.y = screenHeight/2;
+
                         b.y = b.y + screenHeight/8;
+
                         scored = false;
                     }
                 }, 2000);
@@ -360,17 +373,8 @@ public class HockeyArena extends View  {
         }
     }
 
-    void resetPositions() {
-        //paddleBall2.x = screenWidth/2;
-        //paddleBall2.y = screenHeight * 1/3;
-        //paddleBall.x = screenWidth/2;
-        //paddleBall.y =  screenHeight * 2/3;
-        puckBall.x = screenWidth/2;
-        puckBall.y = screenHeight/2;
-    }
-
     void clearVelocity(Ball b) {
-        b.speed_x= 0;
+        b.speed_x = 0;
         b.speed_y = 0;
     }
 
@@ -415,9 +419,9 @@ public class HockeyArena extends View  {
                 controlledBall.speed_x = -50;
 
             if (getDistanceY(controlledBall, puckBall) > 0 + paddleHeight / 2) {
-                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) /5 ;
+                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / DIFFICULTY ;
             } else if (getDistanceY(controlledBall, puckBall) < 0 - paddleHeight / 2) {
-                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) /5 ;
+                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / DIFFICULTY ;
             }
 
             if (controlledBall.speed_y > 50)
@@ -425,33 +429,29 @@ public class HockeyArena extends View  {
             else if (controlledBall.speed_y < -50)
                 controlledBall.speed_y = -50;
 
-            if (Math.abs(getDistanceX(puckBall, controlledBall)) < 10
-                    && Math.abs(getDistanceY(puckBall, controlledBall)) < 10
-                    || controlledBall.y > puckBall.y) {
-                controlledBall.speed_y *= SPEED_FACTOR ;
-                controlledBall.speed_x *= SPEED_FACTOR ;
+            if (controlledBall.y > puckBall.y
+                    ||
+                    (Math.abs(getDistanceX(puckBall, controlledBall)) < controlledBall.ballRadius
+                    && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)) {
+                controlledBall.speed_y *= 1.02;
             }
 
             if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
                     && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)
-                controlledBall.y *= 0.93;
+                controlledBall.y *= Ball.FRICTION_FACTOR;
 
             controlledBall.detectCollisions();
         }
         else if (!scored)
         {
             if (controlledBall.y > controlledBall.ballRadius)
-                controlledBall.speed_y *= 0.98;
+                controlledBall.speed_y *= Ball.FRICTION_FACTOR;
 
             if (controlledBall.x > screenWidth/2 + controlledBall.ballRadius) {
-                controlledBall.speed_x += -0.98;
+                controlledBall.speed_x += -Ball.FRICTION_FACTOR;
             } else if (controlledBall.x < screenWidth/2 - controlledBall.ballRadius) {
-                controlledBall.speed_x +=  0.98;
+                controlledBall.speed_x +=  Ball.FRICTION_FACTOR;
             }
         }
     }
 }
-
-
-
-
