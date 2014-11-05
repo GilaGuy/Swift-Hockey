@@ -25,6 +25,7 @@ import java.util.Random;
 public class HockeyArena extends View  {
 
     private final float SPEED_FACTOR = 1.03f;
+    private int SCORE_TO_WIN = 5;
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -271,7 +272,6 @@ public class HockeyArena extends View  {
             else if (paddleBall2.speed_x < -50)
                 paddleBall2.speed_x = -50;
 
-
             if (getDistanceY(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
                 paddleBall2.speed_y = getDistanceY(puckBall, paddleBall2) /5 ;
                 //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
@@ -285,14 +285,14 @@ public class HockeyArena extends View  {
             else if (paddleBall2.speed_y < -50)
                 paddleBall2.speed_y = -50;
 
-            paddleBall2.detectCollisions();
-
             if (Math.abs(getDistanceX(puckBall, paddleBall2)) < 10
                     && Math.abs(getDistanceY(puckBall, paddleBall2)) < 10
                     || paddleBall2.y > puckBall.y) {
                 paddleBall2.speed_y *= SPEED_FACTOR ;
                 paddleBall2.speed_x *= SPEED_FACTOR ;
             }
+
+            paddleBall2.detectCollisions();
         }
         else
         {
@@ -309,12 +309,13 @@ public class HockeyArena extends View  {
             detectWallCollisions(puckBall);
         }
 
-        if (goalCountBot >= 5 || goalCountTop >= 5) {
-
+        if (goalCountBot >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     resetPositions();
+                    goalCountBot = 0;
+                    goalCountTop = 0;
                 }
             }, 2000);
         }
@@ -400,19 +401,15 @@ public class HockeyArena extends View  {
                 }, 2000);
             }
         }
-
     }
 
     void resetPositions() {
-        paddleBall2.x = screenWidth/2;
+        //paddleBall2.x = screenWidth/2;
         paddleBall2.y = screenHeight * 1/3;
-        paddleBall.x = screenWidth/2;
+        //paddleBall.x = screenWidth/2;
         paddleBall.y =  screenHeight * 2/3;
         puckBall.x = screenWidth/2;
         puckBall.y = screenHeight/2;
-
-        goalCountBot = 0;
-        goalCountTop = 0;
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
@@ -431,11 +428,11 @@ public class HockeyArena extends View  {
     }
 
     public float getDistanceX(Ball b1, Ball b2) {
-        return ( (b1.x)  - b2.x);
+        return b1.x - b2.x;
     }
 
     public float getDistanceY(Ball b1, Ball b2) {
-        return (b1.y - b2.y);
+        return b1.y - b2.y;
     }
 
 }
