@@ -25,7 +25,7 @@ import java.util.Random;
 public class HockeyArena extends View
 {
     private int SCORE_TO_WIN = 5;
-    private int DIFFICULTY = 2; // the lower, the more difficult
+    private int DIFFICULTY = 3; // the lower, the more difficult
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -413,9 +413,9 @@ public class HockeyArena extends View
             // controlledBall.x = puckBall.x; // impossible mode
 
             if (getDistanceX(controlledBall, puckBall) > 0 + paddleHeight / 2) {
-                controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / DIFFICULTY ;
+                controlledBall.speed_x = getDistanceX(puckBall, controlledBall)  ;
             } else if (getDistanceX(controlledBall, puckBall) < 0 - paddleHeight / 2) {
-                controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / DIFFICULTY ;
+                controlledBall.speed_x = getDistanceX(puckBall, controlledBall);
             }
 
             if (controlledBall.speed_x > 50)
@@ -438,11 +438,11 @@ public class HockeyArena extends View
                     ||
                     (Math.abs(getDistanceX(puckBall, controlledBall)) < controlledBall.ballRadius
                     && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)) {
-                controlledBall.speed_y *= 1.03;
+                controlledBall.speed_y *= 1.02;
             }
 
             if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
-                    && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius * 2)
+                    && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)
                 controlledBall.y *= Ball.FRICTION_FACTOR;
 
             controlledBall.detectCollisions();
@@ -450,7 +450,7 @@ public class HockeyArena extends View
         else
         {
             if (controlledBall.y > controlledBall.ballRadius)
-                controlledBall.y *= Ball.FRICTION_FACTOR;
+                controlledBall.speed_y *= Ball.FRICTION_FACTOR;
 
             if (controlledBall.x > screenWidth/2 + controlledBall.ballRadius) {
                 controlledBall.speed_x += -Ball.FRICTION_FACTOR;
