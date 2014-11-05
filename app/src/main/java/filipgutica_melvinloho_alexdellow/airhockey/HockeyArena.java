@@ -24,8 +24,7 @@ import java.util.Random;
  */
 public class HockeyArena extends View  {
 
-    private final float SPEED_FACTORE_POS = 1.05f;
-    private final float SPEED_FACTOR_NEG = -1.05f;
+    private final float SPEED_FACTOR = 1.03f;
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -255,60 +254,51 @@ public class HockeyArena extends View  {
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
-        if (!scored && puckBall.y < canvas.getHeight()/2 ){
+        if (!scored && puckBall.y < canvas.getHeight()/2 )
+        {
+            // paddleBall2.x = puckBall.x;
+
+            if (getDistanceX(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
+                paddleBall2.speed_x = getDistanceX(puckBall, paddleBall2)  ;
+                //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
+            } else if (getDistanceX(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
+                paddleBall2.speed_x = getDistanceX(puckBall, paddleBall2);
+                //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
+            }
+
+            if (paddleBall2.speed_x > 50)
+                paddleBall2.speed_x = 50;
+            else if (paddleBall2.speed_x < -50)
+                paddleBall2.speed_x = -50;
 
 
+            if (getDistanceY(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
+                paddleBall2.speed_y = getDistanceY(puckBall, paddleBall2) /5 ;
+                //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
+            } else if (getDistanceY(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
+                paddleBall2.speed_y = getDistanceY(puckBall, paddleBall2) /5 ;
+                //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
+            }
 
-                        // paddleBall2.x = puckBall.x;
+            if (paddleBall2.speed_y > 50)
+                paddleBall2.speed_y = 50;
+            else if (paddleBall2.speed_y < -50)
+                paddleBall2.speed_y = -50;
 
-                        if (getDistanceX(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
-                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall)  ;
-                            //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
-                        } else if (getDistanceX(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
-                            paddleBall2.speed_x = -getDistanceX(paddleBall2, puckBall);
-                            //paddleBall2.x -= getDistanceX(paddleBall2, puckBall) / (10);
-                        }
+            paddleBall2.detectCollisions();
 
-                        if (paddleBall2.speed_x > 50)
-                            paddleBall2.speed_x = 50;
-                        else if (paddleBall2.speed_x < -50)
-                            paddleBall2.speed_x = -50;
-
-
-                        if (getDistanceY(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
-                            paddleBall2.speed_y = -getDistanceY(paddleBall2, puckBall) /2 ;
-                            //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
-                        } else if (getDistanceY(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
-                            paddleBall2.speed_y = -getDistanceY(paddleBall2, puckBall)/2 ;
-                            //paddleBall2.y -= getDistanceY(paddleBall2, puckBall) / (10);
-                        }
-
-                        if (paddleBall2.speed_y > 50)
-                            paddleBall2.speed_y = 50;
-                        else if (paddleBall2.speed_y < -50)
-                            paddleBall2.speed_y = -50;
-
-                        paddleBall2.detectCollisions();
-
-
-                        if (Math.abs(getDistanceX(paddleBall2, puckBall)) < 10 && Math.abs(getDistanceY(paddleBall2, puckBall)) < 10
-                                || paddleBall2.y > puckBall.y) {
-
-                            paddleBall2.speed_y *= 1.02  ;
-                            paddleBall2.speed_x *= 1.02 ;
-                        }
-
+            if (Math.abs(getDistanceX(puckBall, paddleBall2)) < 10
+                    && Math.abs(getDistanceY(puckBall, paddleBall2)) < 10
+                    || paddleBall2.y > puckBall.y) {
+                paddleBall2.speed_y *= SPEED_FACTOR ;
+                paddleBall2.speed_x *= SPEED_FACTOR ;
+            }
         }
-        else {
-
-            paddleBall2.y--;
-
-
+        else
+        {
+            if (paddleBall2.y > paddleBall2.ballRadius)
+                paddleBall2.y *= 0.93;
         }
-
-
-
-
 
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
@@ -411,12 +401,6 @@ public class HockeyArena extends View  {
             }
         }
 
-    }
-
-
-    void clearVelocities(Ball b) {
-        b.speed_y = 0;
-        b.speed_x = 0;
     }
 
     void resetPositions() {
