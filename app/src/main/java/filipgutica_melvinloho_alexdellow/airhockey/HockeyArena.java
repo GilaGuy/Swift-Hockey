@@ -255,56 +255,7 @@ public class HockeyArena extends View  {
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
-        if (!scored && puckBall.y < screenHeight/2 )
-        {
-            // paddleBall2.x = puckBall.x; // impossible mode
-
-            if (getDistanceX(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
-                paddleBall2.speed_x = getDistanceX(puckBall, paddleBall2)  ;
-            } else if (getDistanceX(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
-                paddleBall2.speed_x = getDistanceX(puckBall, paddleBall2);
-            }
-
-            if (paddleBall2.speed_x > 50)
-                paddleBall2.speed_x = 50;
-            else if (paddleBall2.speed_x < -50)
-                paddleBall2.speed_x = -50;
-
-            if (getDistanceY(paddleBall2, puckBall) > 0 + paddleHeight / 2) {
-                paddleBall2.speed_y = getDistanceY(puckBall, paddleBall2) /5 ;
-            } else if (getDistanceY(paddleBall2, puckBall) < 0 - paddleHeight / 2) {
-                paddleBall2.speed_y = getDistanceY(puckBall, paddleBall2) /5 ;
-            }
-
-            if (paddleBall2.speed_y > 50)
-                paddleBall2.speed_y = 50;
-            else if (paddleBall2.speed_y < -50)
-                paddleBall2.speed_y = -50;
-
-            if (Math.abs(getDistanceX(puckBall, paddleBall2)) < 10
-                    && Math.abs(getDistanceY(puckBall, paddleBall2)) < 10
-                    || paddleBall2.y > puckBall.y) {
-                paddleBall2.speed_y *= SPEED_FACTOR ;
-                paddleBall2.speed_x *= SPEED_FACTOR ;
-            }
-
-            if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
-                    && Math.abs(getDistanceY(puckBall, paddleBall2)) < paddleBall2.ballRadius)
-                paddleBall2.y *= 0.93;
-
-            paddleBall2.detectCollisions();
-        }
-        else if (!scored)
-        {
-            if (paddleBall2.y > paddleBall2.ballRadius)
-                paddleBall2.speed_y *= 0.98;
-
-            if (paddleBall2.x > screenWidth/2 + paddleBall2.ballRadius) {
-                paddleBall2.speed_x += -0.98;
-            } else if (paddleBall2.x < screenWidth/2 - paddleBall2.ballRadius) {
-                paddleBall2.speed_x +=  0.98;
-            }
-        }
+        AiControl(paddleBall2);
 
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
@@ -446,9 +397,58 @@ public class HockeyArena extends View  {
         return b1.y - b2.y;
     }
 
-    public void AiControl(Ball b)
+    public void AiControl(Ball controlledBall)
     {
-        
+        if (!scored && puckBall.y < screenHeight/2 )
+        {
+            // controlledBall.x = puckBall.x; // impossible mode
+
+            if (getDistanceX(controlledBall, puckBall) > 0 + paddleHeight / 2) {
+                controlledBall.speed_x = getDistanceX(puckBall, controlledBall)  ;
+            } else if (getDistanceX(controlledBall, puckBall) < 0 - paddleHeight / 2) {
+                controlledBall.speed_x = getDistanceX(puckBall, controlledBall);
+            }
+
+            if (controlledBall.speed_x > 50)
+                controlledBall.speed_x = 50;
+            else if (controlledBall.speed_x < -50)
+                controlledBall.speed_x = -50;
+
+            if (getDistanceY(controlledBall, puckBall) > 0 + paddleHeight / 2) {
+                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) /5 ;
+            } else if (getDistanceY(controlledBall, puckBall) < 0 - paddleHeight / 2) {
+                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) /5 ;
+            }
+
+            if (controlledBall.speed_y > 50)
+                controlledBall.speed_y = 50;
+            else if (controlledBall.speed_y < -50)
+                controlledBall.speed_y = -50;
+
+            if (Math.abs(getDistanceX(puckBall, controlledBall)) < 10
+                    && Math.abs(getDistanceY(puckBall, controlledBall)) < 10
+                    || controlledBall.y > puckBall.y) {
+                controlledBall.speed_y *= SPEED_FACTOR ;
+                controlledBall.speed_x *= SPEED_FACTOR ;
+            }
+
+            if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
+                    && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)
+                controlledBall.y *= 0.93;
+
+            controlledBall.detectCollisions();
+        }
+        else if (!scored)
+        {
+            if (controlledBall.y > controlledBall.ballRadius)
+                controlledBall.speed_y *= 0.98;
+
+            if (controlledBall.x > screenWidth/2 + controlledBall.ballRadius) {
+                controlledBall.speed_x += -0.98;
+            } else if (controlledBall.x < screenWidth/2 - controlledBall.ballRadius) {
+                controlledBall.speed_x +=  0.98;
+            }
+        }
     }
 }
 
