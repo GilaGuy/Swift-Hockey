@@ -22,10 +22,10 @@ import java.util.Random;
 /**
  * Created by Filip on 2014-09-15.
  */
-public class HockeyArena extends View
+public class HockeyArenaAI extends View
 {
     private int SCORE_TO_WIN = 5;
-    private int DIFFICULTY = 3; // the lower, the more difficult
+    private int DIFFICULTY = 1; // the lower, the more difficult
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -57,11 +57,11 @@ public class HockeyArena extends View
 
     private Random rand = new Random();
 
-    public HockeyArena(Context context) {
+    public HockeyArenaAI(Context context) {
         super(context);
         commonConstructor();
     }
-    public HockeyArena(Context context, AttributeSet attrs) {
+    public HockeyArenaAI(Context context, AttributeSet attrs) {
         super(context, attrs);
         commonConstructor();
     }
@@ -238,8 +238,8 @@ public class HockeyArena extends View
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(3f);
 
-        GameActivity.scoreTop.setText(String.valueOf(goalCountTop));
-        GameActivity.scoreBot.setText(String.valueOf(goalCountBot));
+        GameActivityAI.scoreTop.setText(String.valueOf(goalCountTop));
+        GameActivityAI.scoreBot.setText(String.valueOf(goalCountBot));
 
         canvas.drawBitmap(puckBall.getBitmap(), puckBall.x - puckWidth/2, puckBall.y - puckWidth/2, mPaint);
         canvas.drawBitmap(paddleBall2.getBitmap(), paddleBall2.x - paddleWidth / 2, paddleBall2.y - paddleHeight / 2, mPaint);
@@ -255,7 +255,7 @@ public class HockeyArena extends View
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
-       // AiControl(paddleBall2);
+        AiControl(paddleBall2);
 
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
@@ -406,7 +406,7 @@ public class HockeyArena extends View
         return b1.y - b2.y;
     }
 
-   /* public void AiControl(Ball controlledBall)
+    public void AiControl(Ball controlledBall)
     {
         if (!scored && puckBall.y < screenHeight/2 )
         {
@@ -458,5 +458,5 @@ public class HockeyArena extends View
                 controlledBall.speed_x +=  Ball.FRICTION_FACTOR;
             }
         }
-    }*/
+    }
 }

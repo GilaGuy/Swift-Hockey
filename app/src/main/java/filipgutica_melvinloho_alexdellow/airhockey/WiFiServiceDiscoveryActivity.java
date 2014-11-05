@@ -46,7 +46,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
     // TXT RECORD properties
     public static final String TXTRECORD_PROP_AVAILABLE = "available";
-    public static final String SERVICE_INSTANCE = "AirHockey";
+    public static final String SERVICE_INSTANCE = "_AirHockey";
     public static final String SERVICE_REG_TYPE = "_presence._tcp";
 
     public static final int MESSAGE_READ = 0x400 + 1;

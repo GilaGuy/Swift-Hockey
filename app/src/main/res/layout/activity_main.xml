@@ -24,4 +24,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
         android:onClick="onClickMultiPlay" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Versus AI"
+        android:id="@+id/btnAI"
+        android:layout_below="@+id/twoPlayer"
+        android:layout_alignStart="@+id/multiPlayer"
+        android:layout_alignEnd="@+id/twoPlayer"
+        android:onClick="onClickAI" />
 </RelativeLayout>
