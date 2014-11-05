@@ -22,10 +22,10 @@ import java.util.Random;
 /**
  * Created by Filip on 2014-09-15.
  */
-public class HockeyArena extends View  {
-
+public class HockeyArena extends View
+{
     private int SCORE_TO_WIN = 5;
-    private int DIFFICULTY = 5;
+    private int DIFFICULTY = 3; // the lower, the more difficult
 
     private Paint mPaint = new Paint();         // Paint to draw set color etc...
 
@@ -269,7 +269,10 @@ public class HockeyArena extends View  {
         if (goalCountBot >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
             handler.postDelayed(new Runnable() {
                 @Override
-                public void run() {
+                public void run()
+                {
+                    for (Ball b : Ball.balls) clearVelocity(b);
+
                     puckBall.x = screenWidth/2;
                     puckBall.y = screenHeight/2;
 
@@ -322,12 +325,10 @@ public class HockeyArena extends View  {
                 b.x = getWidth() * 2;
                 b.y = getHeight() * 2;
 
-                final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        puckBall.x = screenWidth/2;
-                        puckBall.y = screenHeight/2;
+                        resetPuck();
 
                         b.y = b.y - screenHeight/8;
 
@@ -357,12 +358,10 @@ public class HockeyArena extends View  {
                 b.speed_x = 0;
                 b.speed_y = 0;
 
-                final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        puckBall.x = screenWidth/2;
-                        puckBall.y = screenHeight/2;
+                        resetPuck();
 
                         b.y = b.y + screenHeight/8;
 
@@ -376,6 +375,12 @@ public class HockeyArena extends View  {
     void clearVelocity(Ball b) {
         b.speed_x = 0;
         b.speed_y = 0;
+    }
+
+    void resetPuck() {
+        clearVelocity(puckBall);
+        puckBall.x = screenWidth/2;
+        puckBall.y = screenHeight/2;
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
@@ -442,7 +447,7 @@ public class HockeyArena extends View  {
 
             controlledBall.detectCollisions();
         }
-        else if (!scored)
+        else
         {
             if (controlledBall.y > controlledBall.ballRadius)
                 controlledBall.speed_y *= Ball.FRICTION_FACTOR;
