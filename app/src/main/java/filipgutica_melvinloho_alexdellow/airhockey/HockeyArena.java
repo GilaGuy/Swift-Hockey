@@ -17,45 +17,41 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.util.Random;
-
 /**
  * Created by Filip on 2014-09-15.
  */
 public class HockeyArena extends View
 {
-    private int SCORE_TO_WIN = 5;
-    private int DIFFICULTY = 3; // the lower, the more difficult
+    protected static int SCORE_TO_WIN = 5;
+    protected static int AI_DIFFICULTY = 1; // the lower, the more difficult
 
-    private Paint mPaint = new Paint();         // Paint to draw set color etc...
+    protected Paint mPaint = new Paint();         // Paint to draw set color etc...
 
-    private Bitmap paddle;                      // First Paddle img
-    private Bitmap puck;                        // Puck img
-    private Bitmap paddle2;                     // Second paddle img
+    protected Bitmap paddle;                      // First Paddle img
+    protected Bitmap puck;                        // Puck img
+    protected Bitmap paddle2;                     // Second paddle img
 
-    private Ball paddleBall2;                   // Second paddle. Ball object to give it Collision detection and trakc speed
-    private Ball paddleBall;                    // First paddle. "" ""
-    private Ball puckBall;                      // Puck "" ""
+    protected Ball paddleBall2;                   // Second paddle. Ball object to give it Collision detection and trakc speed
+    protected Ball paddleBall;                    // First paddle. "" ""
+    protected Ball puckBall;                      // Puck "" ""
 
-    private float paddleWidth;                  // Width of a paddle
-    private float paddleHeight;                 // Height of a paddle
-    private float puckWidth;                    // Width of a puck
-    private float puckHeight;                   // Height of a puck
+    protected float paddleWidth;                  // Width of a paddle
+    protected float paddleHeight;                 // Height of a paddle
+    protected float puckWidth;                    // Width of a puck
+    protected float puckHeight;                   // Height of a puck
 
-    private VelocityTracker velocity = null;    // Used to track velocity of your finger as it swipes along the screen
-    private VelocityTracker velocity2 = null;    // "" ""
+    protected VelocityTracker velocity = null;    // Used to track velocity of your finger as it swipes along the screen
+    protected VelocityTracker velocity2 = null;    // "" ""
 
-    private int goalCountTop;
-    private int goalCountBot;
+    protected int goalCountTop;
+    protected int goalCountBot;
 
-    private int screenWidth;
-    private int screenHeight;
+    protected int screenWidth;
+    protected int screenHeight;
 
-    Handler handler = new Handler();
+    protected Handler handler = new Handler();
 
-    boolean scored;
-
-    private Random rand = new Random();
+    protected boolean scored;
 
     public HockeyArena(Context context) {
         super(context);
@@ -66,7 +62,7 @@ public class HockeyArena extends View
         commonConstructor();
     }
 
-    public void commonConstructor() {
+    protected void commonConstructor() {
         cleanUp();
         
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -94,7 +90,7 @@ public class HockeyArena extends View
         puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck);
     }
 
-    public void cleanUp() {
+    protected void cleanUp() {
         paddleBall = paddleBall2 = puckBall = null;
         paddle = paddle2 = puck = null;
         velocity = velocity2 = null;
@@ -190,30 +186,15 @@ public class HockeyArena extends View
                     }
                 }
                 break;
-
-            case MotionEvent.ACTION_UP:
-              //  clearVelocities(paddleBall);
-              //  clearVelocities(paddleBall2);
-                break;
-
-            case MotionEvent.ACTION_POINTER_UP:
-               // clearVelocities(paddleBall);
-               // clearVelocities(paddleBall2);
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-                // Return a VelocityTracker object back to be re-used by others.
-                //velocity.recycle();
-               // velocity2.recycle();
-                break;
         }
 
         return true;
     }
 
     @Override
-    public void onDraw(final Canvas canvas) {
-        super.onDraw(canvas);
+    protected void onDraw(final Canvas canvas)
+    {
+        loop();
 
         mPaint.setColor(Color.BLUE);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -245,17 +226,12 @@ public class HockeyArena extends View
         canvas.drawBitmap(paddleBall2.getBitmap(), paddleBall2.x - paddleWidth / 2, paddleBall2.y - paddleHeight / 2, mPaint);
         canvas.drawBitmap(paddleBall.getBitmap(), paddleBall.x - paddleWidth / 2, paddleBall.y - paddleHeight / 2, mPaint);
 
-        if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
-            paddleBall.y = screenHeight / 2 + paddleHeight / 2;
-            paddleBall.speed_y = Math.abs(paddleBall.speed_y);
-        }
+        invalidate();
+    }
 
-        if (paddleBall2.y > screenHeight/2 - paddleHeight/2) {
-            paddleBall2.y = screenHeight / 2 - paddleHeight / 2;
-            paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
-        }
-
-       // AiControl(paddleBall2);
+    protected void loop()
+    {
+        // AiControl(paddleBall2);
 
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
@@ -264,6 +240,16 @@ public class HockeyArena extends View
 
         if (!scored) {
             detectWallCollisions(puckBall);
+        }
+
+        if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
+            paddleBall.y = screenHeight / 2 + paddleHeight / 2;
+            paddleBall.speed_y = Math.abs(paddleBall.speed_y);
+        }
+
+        if (paddleBall2.y > screenHeight/2 - paddleHeight/2) {
+            paddleBall2.y = screenHeight / 2 - paddleHeight / 2;
+            paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
         if (goalCountBot >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
@@ -286,11 +272,9 @@ public class HockeyArena extends View
                 }
             }, 2000);
         }
-
-        invalidate();
     }
 
-    public void detectWallCollisions(final Ball b) {
+    protected void detectWallCollisions(final Ball b) {
 
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
@@ -372,18 +356,18 @@ public class HockeyArena extends View
         }
     }
 
-    void clearVelocity(Ball b) {
+    protected void clearVelocity(Ball b) {
         b.speed_x = 0;
         b.speed_y = 0;
     }
 
-    void resetPuck() {
+    protected void resetPuck() {
         clearVelocity(puckBall);
         puckBall.x = screenWidth/2;
         puckBall.y = screenHeight/2;
     }
 
-    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+    protected Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;
@@ -398,65 +382,11 @@ public class HockeyArena extends View
         return resizedBitmap;
     }
 
-    public float getDistanceX(Ball b1, Ball b2) {
+    protected float getDistanceX(Ball b1, Ball b2) {
         return b1.x - b2.x;
     }
 
-    public float getDistanceY(Ball b1, Ball b2) {
+    protected float getDistanceY(Ball b1, Ball b2) {
         return b1.y - b2.y;
     }
-
-   /* public void AiControl(Ball controlledBall)
-    {
-        if (!scored && puckBall.y < screenHeight/2 )
-        {
-            // controlledBall.x = puckBall.x; // impossible mode
-
-            if (getDistanceX(controlledBall, puckBall) > 0 + paddleHeight / 2) {
-                controlledBall.speed_x = getDistanceX(puckBall, controlledBall)  ;
-            } else if (getDistanceX(controlledBall, puckBall) < 0 - paddleHeight / 2) {
-                controlledBall.speed_x = getDistanceX(puckBall, controlledBall);
-            }
-
-            if (controlledBall.speed_x > 50)
-                controlledBall.speed_x = 50;
-            else if (controlledBall.speed_x < -50)
-                controlledBall.speed_x = -50;
-
-            if (getDistanceY(controlledBall, puckBall) > 0 + paddleHeight / 2) {
-                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / DIFFICULTY ;
-            } else if (getDistanceY(controlledBall, puckBall) < 0 - paddleHeight / 2) {
-                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / DIFFICULTY ;
-            }
-
-            if (controlledBall.speed_y > 50)
-                controlledBall.speed_y = 50;
-            else if (controlledBall.speed_y < -50)
-                controlledBall.speed_y = -50;
-
-            if (controlledBall.y > puckBall.y
-                    ||
-                    (Math.abs(getDistanceX(puckBall, controlledBall)) < controlledBall.ballRadius
-                    && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)) {
-                controlledBall.speed_y *= 1.02;
-            }
-
-            if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
-                    && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius)
-                controlledBall.y *= Ball.FRICTION_FACTOR;
-
-            controlledBall.detectCollisions();
-        }
-        else
-        {
-            if (controlledBall.y > controlledBall.ballRadius)
-                controlledBall.speed_y *= Ball.FRICTION_FACTOR;
-
-            if (controlledBall.x > screenWidth/2 + controlledBall.ballRadius) {
-                controlledBall.speed_x += -Ball.FRICTION_FACTOR;
-            } else if (controlledBall.x < screenWidth/2 - controlledBall.ballRadius) {
-                controlledBall.speed_x +=  Ball.FRICTION_FACTOR;
-            }
-        }
-    }*/
 }
