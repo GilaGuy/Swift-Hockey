@@ -292,12 +292,28 @@ public class HockeyArena extends View  {
                 paddleBall2.speed_x *= SPEED_FACTOR ;
             }
 
+            if (puckBall.x == 0 || puckBall.x == canvas.getWidth())
+                paddleBall2.y *= 0.90;
+
             paddleBall2.detectCollisions();
         }
-        else
+        else if (!scored)
         {
+            clearVelocity(paddleBall2);
             if (paddleBall2.y > paddleBall2.ballRadius)
+                //paddleBall2.y *= 0.93;
+
+            if (paddleBall2.y > canvas.getHeight()/8 && paddleBall2.x > canvas.getWidth()/2) {
                 paddleBall2.y *= 0.93;
+                paddleBall2.x *= 0.93;
+            }
+
+            if (paddleBall2.y > canvas.getHeight()/8 && paddleBall2.x < canvas.getWidth()/2) {
+                paddleBall2.y *= 0.93;
+                paddleBall2.x *= 1.13;
+            }
+
+
         }
 
         for (Ball b : Ball.balls) b.update();
@@ -410,6 +426,11 @@ public class HockeyArena extends View  {
         paddleBall.y =  screenHeight * 2/3;
         puckBall.x = screenWidth/2;
         puckBall.y = screenHeight/2;
+    }
+
+    void clearVelocity(Ball b) {
+        b.speed_x= 0;
+        b.speed_y = 0;
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
