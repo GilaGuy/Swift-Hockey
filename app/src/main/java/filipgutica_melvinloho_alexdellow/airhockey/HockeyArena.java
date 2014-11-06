@@ -112,7 +112,7 @@ public class HockeyArena extends View
         rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
         rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
 
-        sp = new SoundPool(16, AudioManager.STREAM_MUSIC, 0);
+        sp = new SoundPool(24, AudioManager.STREAM_MUSIC, 0);
 
         sound_verynice = sp.load(getContext(), raw.verynice, 1);
         sound_nevergetthis = sp.load(getContext(), raw.nevergetthis, 1);
