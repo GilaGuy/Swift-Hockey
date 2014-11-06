@@ -19,6 +19,8 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.util.Random;
+
 import static filipgutica_melvinloho_alexdellow.airhockey.R.drawable;
 import static filipgutica_melvinloho_alexdellow.airhockey.R.raw;
 
@@ -29,6 +31,8 @@ public class HockeyArena extends View
 {
     protected static int SCORE_TO_WIN = 5;
     protected static int AI_DIFFICULTY = 1;       // the lower, the more difficult
+    protected static long TIME_OUT = 4000;
+    protected static Random rand = new Random();
 
     protected Paint mPaint;                       // Paint to draw set color etc...
     protected Handler handler;                    // Handles delayed events
@@ -64,7 +68,7 @@ public class HockeyArena extends View
 
     private int sound_verynice;
     private int sound_nevergetthis;
-    private int sound_bounce01;
+    private int sound_bounces[];
 
     public HockeyArena(Context context) {
         super(context);
@@ -112,7 +116,11 @@ public class HockeyArena extends View
 
         sound_verynice = sp.load(getContext(), raw.verynice, 1);
         sound_nevergetthis = sp.load(getContext(), raw.nevergetthis, 1);
-        sound_bounce01 = sp.load(getContext(), raw.bounce_01, 1);
+        sound_bounces = new int[] {
+                sp.load(getContext(), raw.bounce_01, 1),
+                sp.load(getContext(), raw.bounce_01, 1),
+                sp.load(getContext(), raw.bounce_01, 1)
+        };
     }
 
     protected void cleanUp() {
@@ -296,7 +304,7 @@ public class HockeyArena extends View
                     goalCountBot = 0;
                     goalCountTop = 0;
                 }
-            }, 4000);
+            }, TIME_OUT);
         }
     }
 
@@ -308,7 +316,7 @@ public class HockeyArena extends View
             b.speed_x = Math.abs(b.speed_x);
             b.x = 0 + b.ballRadius/2 ;
 
-            sp.play(sound_bounce01, 1, 1, 0, 0, 1);
+            sfx_bounce(b);
 
         //when paddle hits right wall
         } else if ( b.x > getWidth()- b.ballRadius/2) {
@@ -316,7 +324,7 @@ public class HockeyArena extends View
             b.speed_x= -Math.abs(b.speed_x);
             b.x = getWidth() - b.ballRadius/2;
 
-            sp.play(sound_bounce01, 1, 1, 0, 0, 1);
+            sfx_bounce(b);
         }
 
 
@@ -327,14 +335,14 @@ public class HockeyArena extends View
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
 
-                sp.play(sound_bounce01, 1, 1, 0, 0, 1);
+                sfx_bounce(b);
             }
 
             else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
 
-                sp.play(sound_bounce01, 1, 1, 0, 0, 1);
+                sfx_bounce(b);
             }
             else if (b.y < 0 - b.ballRadius)
             {
@@ -357,7 +365,7 @@ public class HockeyArena extends View
 
                         scored = false;
                     }
-                }, 4000);
+                }, TIME_OUT);
             }
 
         //paddle hits bottom wall
@@ -367,13 +375,13 @@ public class HockeyArena extends View
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
 
-                sp.play(sound_bounce01, 1, 1, 0, 0, 1);
+                sfx_bounce(b);
             }
             else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
 
-                sp.play(sound_bounce01, 1, 1, 0, 0, 1);
+                sfx_bounce(b);
             }
             else if (b.y > getHeight() + b.ballRadius)
             {
@@ -396,7 +404,7 @@ public class HockeyArena extends View
 
                         scored = false;
                     }
-                }, 4000);
+                }, TIME_OUT);
             }
         }
     }
@@ -433,5 +441,15 @@ public class HockeyArena extends View
 
     protected float getDistanceY(Ball b1, Ball b2) {
         return b1.y - b2.y;
+    }
+    
+    protected void sfx_bounce(Ball b) {
+        float volumex = b.speed_x / Ball.MAX_SPEED.x;
+        float volumey = b.speed_y / Ball.MAX_SPEED.y;
+        float volume_final = Math.max(volumex, volumey);
+
+        sp.play(sound_bounces[rand.nextInt(sound_bounces.length)],
+                volume_final, volume_final,
+                0, 0, 1);
     }
 }

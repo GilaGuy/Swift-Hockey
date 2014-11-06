@@ -1,6 +1,7 @@
 package filipgutica_melvinloho_alexdellow.airhockey;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 public class Ball {
 
     public static float FRICTION_FACTOR = .98f;
+
+    public static Point MAX_SPEED = new Point(50, 50);
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
 

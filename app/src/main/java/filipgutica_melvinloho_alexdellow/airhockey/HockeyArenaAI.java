@@ -116,7 +116,7 @@ public class HockeyArenaAI extends HockeyArena
                     goalCountBot = 0;
                     goalCountTop = 0;
                 }
-            }, 2000);
+            }, HockeyArena.TIME_OUT);
         }
     }
 
@@ -132,10 +132,10 @@ public class HockeyArenaAI extends HockeyArena
                 controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / AI_DIFFICULTY ;
             }
 
-            if (controlledBall.speed_x > 50)
-                controlledBall.speed_x = 50;
-            else if (controlledBall.speed_x < -50)
-                controlledBall.speed_x = -50;
+            if (controlledBall.speed_x > Ball.MAX_SPEED.x)
+                controlledBall.speed_x = Ball.MAX_SPEED.x;
+            else if (controlledBall.speed_x < -Ball.MAX_SPEED.x)
+                controlledBall.speed_x = -Ball.MAX_SPEED.x;
 
             if (getDistanceY(controlledBall, puckBall) > 0 + paddleHeight / 2) {
                 controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / AI_DIFFICULTY ;
@@ -143,10 +143,10 @@ public class HockeyArenaAI extends HockeyArena
                 controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / AI_DIFFICULTY ;
             }
 
-            if (controlledBall.speed_y > 50)
-                controlledBall.speed_y = 50;
-            else if (controlledBall.speed_y < -50)
-                controlledBall.speed_y = -50;
+            if (controlledBall.speed_y > Ball.MAX_SPEED.y)
+                controlledBall.speed_y = Ball.MAX_SPEED.y;
+            else if (controlledBall.speed_y < -Ball.MAX_SPEED.y)
+                controlledBall.speed_y = -Ball.MAX_SPEED.y;
 
             if (controlledBall.y > puckBall.y
                     ||
