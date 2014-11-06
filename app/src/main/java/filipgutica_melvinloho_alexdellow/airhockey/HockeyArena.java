@@ -65,6 +65,8 @@ public class HockeyArena extends View
     private final MediaPlayer mp3 = MediaPlayer.create(getContext(), raw.bounce);
     private final MediaPlayer mp4 = MediaPlayer.create(getContext(), raw.bounce);
     private final MediaPlayer verynice = MediaPlayer.create(getContext(), raw.verynice);
+    private final MediaPlayer nevergetthis = MediaPlayer.create(getContext(), raw.nevergetthis);
+
 
     public HockeyArena(Context context) {
         super(context);
@@ -326,6 +328,7 @@ public class HockeyArena extends View
             else if (b.y < 0 - b.ballRadius)
             {
                 //Goal scored
+                nevergetthis.start();
                 goalCountBot++;
                 scored = true;
                 b.speed_x = 0;
@@ -342,7 +345,7 @@ public class HockeyArena extends View
 
                         scored = false;
                     }
-                }, 2000);
+                }, 3000);
             }
 
         //paddle hits bottom wall
@@ -378,7 +381,7 @@ public class HockeyArena extends View
 
                         scored = false;
                     }
-                }, 2000);
+                }, 3000);
             }
         }
     }
