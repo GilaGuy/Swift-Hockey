@@ -64,6 +64,7 @@ public class HockeyArena extends View
     private final MediaPlayer mp2 = MediaPlayer.create(getContext(), raw.bounce);
     private final MediaPlayer mp3 = MediaPlayer.create(getContext(), raw.bounce);
     private final MediaPlayer mp4 = MediaPlayer.create(getContext(), raw.bounce);
+    private final MediaPlayer verynice = MediaPlayer.create(getContext(), raw.verynice);
 
     public HockeyArena(Context context) {
         super(context);
@@ -366,6 +367,7 @@ public class HockeyArena extends View
                 b.y = getHeight();
                 b.speed_x = 0;
                 b.speed_y = 0;
+                verynice.start();
 
                 handler.postDelayed(new Runnable() {
                     @Override
