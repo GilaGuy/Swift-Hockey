@@ -56,11 +56,6 @@ public class Ball {
     public void update() {
         x += speed_x;
         y += speed_y;
-        if (x >= 300 - ballRadius && speed_x > 0) speed_x = Math.abs(speed_x);
-        if (x <= ballRadius && speed_x < 0) speed_x = -Math.abs(speed_x);
-        if (y >= 200 - ballRadius && speed_y > 0) speed_y = Math.abs(speed_y);
-        if (y <= ballRadius && speed_y < 0) speed_y = -Math.abs(speed_y);
-
         speed_x *= FRICTION_FACTOR;
         speed_y *= FRICTION_FACTOR;
     }
@@ -74,6 +69,7 @@ public class Ball {
                         && y < b.y + ballRadius + b.ballRadius) {
                     if (distanceTo(this, b) < ballRadius + b.ballRadius) {
                         calculateNewVelocities(this, b);
+                        HockeyArena.sfx_bounce(b);
                     }
                 }
             }

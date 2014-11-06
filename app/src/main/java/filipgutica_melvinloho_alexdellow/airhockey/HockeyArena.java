@@ -64,11 +64,11 @@ public class HockeyArena extends View
     private RectF rectFTop;
     private RectF rectFbot;
 
-    private SoundPool sp;
+    private static SoundPool sp;
 
     private int sound_verynice;
     private int sound_nevergetthis;
-    private int sound_bounces[];
+    private static int sound_bounces[];
 
     public HockeyArena(Context context) {
         super(context);
@@ -268,15 +268,16 @@ public class HockeyArena extends View
 
     protected void loop()
     {
+        for (Ball b : Ball.balls) b.update();
+
         for (Ball b : Ball.balls) b.detectCollisions();
+
         detectWallCollisions(paddleBall);
         detectWallCollisions(paddleBall2);
 
         if (!scored) {
             detectWallCollisions(puckBall);
         }
-
-        for (Ball b : Ball.balls) b.update();
 
         if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
             paddleBall.y = screenHeight / 2 + paddleHeight / 2;
@@ -310,8 +311,8 @@ public class HockeyArena extends View
         }
     }
 
-    protected void detectWallCollisions(final Ball b) {
-
+    protected void detectWallCollisions(final Ball b)
+    {
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
 
@@ -444,13 +445,14 @@ public class HockeyArena extends View
         return b1.y - b2.y;
     }
     
-    protected void sfx_bounce(Ball b) {
+    protected static void sfx_bounce(Ball b) {
         float volumex = Math.abs(b.speed_x) / Ball.MAX_SPEED.x;
         float volumey = Math.abs(b.speed_y) / Ball.MAX_SPEED.y;
         float volume_final = Math.max(volumex, volumey);
 
-        sp.play(sound_bounces[rand.nextInt(sound_bounces.length)],
-                volume_final, volume_final,
-                0, 0, 1);
+        if (volume_final > 0.3)
+            sp.play(sound_bounces[rand.nextInt(sound_bounces.length)],
+                    volume_final, volume_final,
+                    0, 0, 1);
     }
 }

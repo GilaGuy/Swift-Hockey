@@ -80,7 +80,9 @@ public class HockeyArenaAI extends HockeyArena
         AiControl(paddleBall2);
 
         for (Ball b : Ball.balls) b.update();
+
         for (Ball b : Ball.balls) b.detectCollisions();
+
         detectWallCollisions(paddleBall);
         detectWallCollisions(paddleBall2);
 
@@ -116,7 +118,7 @@ public class HockeyArenaAI extends HockeyArena
                     goalCountBot = 0;
                     goalCountTop = 0;
                 }
-            }, HockeyArena.TIME_OUT);
+            }, TIME_OUT);
         }
     }
 
