@@ -28,9 +28,10 @@ import static filipgutica_melvinloho_alexdellow.airhockey.R.raw;
 public class HockeyArena extends View
 {
     protected static int SCORE_TO_WIN = 5;
-    protected static int AI_DIFFICULTY = 1; // the lower, the more difficult
+    protected static int AI_DIFFICULTY = 1;       // the lower, the more difficult
 
-    protected Paint mPaint = new Paint();         // Paint to draw set color etc...
+    protected Paint mPaint;                       // Paint to draw set color etc...
+    protected Handler handler;                    // Handles delayed events
 
     protected Bitmap paddle;                      // First Paddle img
     protected Bitmap puck;                        // Puck img
@@ -45,16 +46,14 @@ public class HockeyArena extends View
     protected float puckWidth;                    // Width of a puck
     protected float puckHeight;                   // Height of a puck
 
-    protected VelocityTracker velocity = null;    // Used to track velocity of your finger as it swipes along the screen
-    protected VelocityTracker velocity2 = null;    // "" ""
+    protected VelocityTracker velocity;           // Used to track velocity of a finger as it swipes along the screen
+    protected VelocityTracker velocity2;          // ----//----
 
     protected int goalCountTop;
     protected int goalCountBot;
 
     protected int screenWidth;
     protected int screenHeight;
-
-    protected Handler handler = new Handler();
 
     protected boolean scored;
 
@@ -86,6 +85,9 @@ public class HockeyArena extends View
         screenWidth = size.x;
         screenHeight = size.y;
 
+        mPaint = new Paint();
+        handler = new Handler();
+
         paddle = BitmapFactory.decodeResource(getResources(), drawable.funny);
         paddle2 = BitmapFactory.decodeResource(getResources(), drawable.funny2);
         puck = BitmapFactory.decodeResource(getResources(), drawable.puck);
@@ -114,6 +116,9 @@ public class HockeyArena extends View
     }
 
     protected void cleanUp() {
+        mPaint = null;
+        handler = null;
+
         paddleBall = paddleBall2 = puckBall = null;
         paddle = paddle2 = puck = null;
         velocity = velocity2 = null;
