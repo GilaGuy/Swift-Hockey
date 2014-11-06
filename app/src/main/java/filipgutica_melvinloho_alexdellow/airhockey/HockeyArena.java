@@ -268,7 +268,6 @@ public class HockeyArena extends View
 
     protected void loop()
     {
-        for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
         detectWallCollisions(paddleBall);
         detectWallCollisions(paddleBall2);
@@ -276,6 +275,8 @@ public class HockeyArena extends View
         if (!scored) {
             detectWallCollisions(puckBall);
         }
+
+        for (Ball b : Ball.balls) b.update();
 
         if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
             paddleBall.y = screenHeight / 2 + paddleHeight / 2;
@@ -327,7 +328,6 @@ public class HockeyArena extends View
 
             sfx_bounce(b);
         }
-
 
         //paddle hits top wall
         if (b.y < 0 + b.ballRadius/2) {
