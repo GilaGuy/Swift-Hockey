@@ -118,8 +118,9 @@ public class HockeyArena extends View
         sound_nevergetthis = sp.load(getContext(), raw.nevergetthis, 1);
         sound_bounces = new int[] {
                 sp.load(getContext(), raw.bounce_01, 1),
-                sp.load(getContext(), raw.bounce_01, 1),
-                sp.load(getContext(), raw.bounce_01, 1)
+                sp.load(getContext(), raw.bounce_02, 1),
+                sp.load(getContext(), raw.bounce_03, 1),
+                sp.load(getContext(), raw.bounce_04, 1)
         };
     }
 
@@ -444,8 +445,8 @@ public class HockeyArena extends View
     }
     
     protected void sfx_bounce(Ball b) {
-        float volumex = b.speed_x / Ball.MAX_SPEED.x;
-        float volumey = b.speed_y / Ball.MAX_SPEED.y;
+        float volumex = Math.abs(b.speed_x) / Ball.MAX_SPEED.x;
+        float volumey = Math.abs(b.speed_y) / Ball.MAX_SPEED.y;
         float volume_final = Math.max(volumex, volumey);
 
         sp.play(sound_bounces[rand.nextInt(sound_bounces.length)],
