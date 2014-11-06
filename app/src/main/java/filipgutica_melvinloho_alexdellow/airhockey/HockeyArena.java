@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -16,6 +17,9 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.WindowManager;
+
+import static filipgutica_melvinloho_alexdellow.airhockey.R.drawable;
+import static filipgutica_melvinloho_alexdellow.airhockey.R.raw;
 
 /**
  * Created by Filip on 2014-09-15.
@@ -53,6 +57,14 @@ public class HockeyArena extends View
 
     protected boolean scored;
 
+    private RectF rectFTop;
+    private RectF rectFbot;
+
+   private final MediaPlayer mp1 = MediaPlayer.create(getContext(), raw.bounce);
+    private final MediaPlayer mp2 = MediaPlayer.create(getContext(), raw.bounce);
+    private final MediaPlayer mp3 = MediaPlayer.create(getContext(), raw.bounce);
+    private final MediaPlayer mp4 = MediaPlayer.create(getContext(), raw.bounce);
+
     public HockeyArena(Context context) {
         super(context);
         commonConstructor();
@@ -72,9 +84,9 @@ public class HockeyArena extends View
         screenWidth = size.x;
         screenHeight = size.y;
 
-        paddle = BitmapFactory.decodeResource(getResources(),R.drawable.funny);
-        paddle2 = BitmapFactory.decodeResource(getResources(), R.drawable.funny2);
-        puck = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
+        paddle = BitmapFactory.decodeResource(getResources(), drawable.funny);
+        paddle2 = BitmapFactory.decodeResource(getResources(), drawable.funny2);
+        puck = BitmapFactory.decodeResource(getResources(), drawable.puck);
 
         paddle = getResizedBitmap(paddle, screenWidth/7, screenWidth/7);
         paddle2 = getResizedBitmap(paddle2, screenWidth/7, screenWidth/7);
@@ -88,6 +100,9 @@ public class HockeyArena extends View
         paddleBall2 = new Ball(paddle2, screenWidth/2, screenHeight * 1/3, (int)(paddleHeight)/2, Ball.type.paddle);
         paddleBall = new Ball(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball.type.paddle);
         puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck);
+
+        rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
+        rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
     }
 
     protected void cleanUp() {
@@ -211,8 +226,7 @@ public class HockeyArena extends View
         canvas.drawLine(screenWidth / 3, 1, screenWidth * 2 / 3, 1, mPaint);
         canvas.drawLine(screenWidth /3, screenHeight - 1, screenWidth * 2/3, screenHeight - 1, mPaint);
 
-        RectF rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
-        RectF rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
+
         canvas.drawArc(rectFTop, 0, 180, true, mPaint);
         canvas.drawArc(rectFbot, 180, 360, true, mPaint);
 
@@ -278,26 +292,35 @@ public class HockeyArena extends View
 
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
+
             b.speed_x = Math.abs(b.speed_x);
             b.x = 0 + b.ballRadius/2 ;
+
+            mp1.start();
+
 
         //when paddle hits right wall
         } else if ( b.x > getWidth()- b.ballRadius/2) {
 
             b.speed_x= -Math.abs(b.speed_x);
             b.x = getWidth() - b.ballRadius/2;
+            mp2.start();
         }
+
+
         //paddle hits top wall
         if (b.y < 0 + b.ballRadius/2) {
 
             if (b.getType() == Ball.type.paddle) {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
+
             }
 
             else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
+                mp3.start();
             }
             else if (b.y < 0 - b.ballRadius)
             {
@@ -327,10 +350,12 @@ public class HockeyArena extends View
             if (b.getType() == Ball.type.paddle) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
+
             }
             else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
+                mp4.start();
             }
             else if (b.y > getHeight() + b.ballRadius)
             {
