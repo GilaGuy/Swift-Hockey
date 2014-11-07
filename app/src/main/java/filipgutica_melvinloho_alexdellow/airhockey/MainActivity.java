@@ -2,6 +2,7 @@ package filipgutica_melvinloho_alexdellow.airhockey;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,10 +11,16 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 
+    private MediaPlayer mp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_waiting_loop);
+        mp.setLooping(true);
+        mp.start();
     }
 
     public void onClickTwoPlayer(View v)
@@ -21,7 +28,6 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, GameActivity.class);
 
         startActivity(intent);
-
     }
 
     public void onClickMultiPlay(View v) {
@@ -53,5 +59,25 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopMusic();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopMusic();
+    }
+
+    public void stopMusic() {
+        if(mp != null && mp.isPlaying()) {
+            mp.stop();
+            mp.release();
+            mp = null;
+        }
     }
 }
