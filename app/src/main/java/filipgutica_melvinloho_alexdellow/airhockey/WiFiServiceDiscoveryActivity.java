@@ -1,11 +1,11 @@
 
 package filipgutica_melvinloho_alexdellow.airhockey;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -14,18 +14,24 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.DnsSdServiceResponseListener;
 import android.net.wifi.p2p.WifiP2pManager.DnsSdTxtRecordListener;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import filipgutica_melvinloho_alexdellow.airhockey.WiFiChatFragment.MessageTarget;
+import filipgutica_melvinloho_alexdellow.airhockey.WiFiDirectServicesList.DeviceClickListener;
+import filipgutica_melvinloho_alexdellow.airhockey.WiFiDirectServicesList.WiFiDevicesAdapter;
 
 /**
  * The main activity for the sample. This activity registers a local service and
@@ -38,15 +44,15 @@ import java.util.Map;
  * {@code WiFiChatFragment} is then added to the the main activity which manages
  * the interface and messaging needs for a chat session.
  */
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class WiFiServiceDiscoveryActivity extends Activity implements
-        WifiP2pManager.ConnectionInfoListener, WiFiDirectServicesList.DeviceClickListener {
+        DeviceClickListener, Handler.Callback, MessageTarget,
+        ConnectionInfoListener {
 
     public static final String TAG = "wifidirectdemo";
 
     // TXT RECORD properties
     public static final String TXTRECORD_PROP_AVAILABLE = "available";
-    public static final String SERVICE_INSTANCE = "_AirHockey";
+    public static final String SERVICE_INSTANCE = "_wifidemotest";
     public static final String SERVICE_REG_TYPE = "_presence._tcp";
 
     public static final int MESSAGE_READ = 0x400 + 1;
@@ -60,10 +66,20 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     private BroadcastReceiver receiver = null;
     private WifiP2pDnsSdServiceRequest serviceRequest;
 
+    private Handler handler = new Handler(this);
+    private WiFiChatFragment chatFragment;
+
     private WiFiDirectServicesList servicesList;
 
     private TextView statusTxtView;
 
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
 
     /** Called when the activity is first created. */
     @Override
@@ -120,7 +136,6 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     /**
      * Registers a local service and then initiates a service discovery
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void startRegistrationAndDiscovery() {
         Map<String, String> record = new HashMap<String, String>();
         record.put(TXTRECORD_PROP_AVAILABLE, "visible");
@@ -144,7 +159,6 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void discoverService() {
 
         /*
@@ -168,7 +182,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                             WiFiDirectServicesList fragment = (WiFiDirectServicesList) getFragmentManager()
                                     .findFragmentByTag("services");
                             if (fragment != null) {
-                                WiFiDirectServicesList.WiFiDevicesAdapter adapter = ((WiFiDirectServicesList.WiFiDevicesAdapter) fragment
+                                WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
                                         .getListAdapter());
                                 WiFiP2pService service = new WiFiP2pService();
                                 service.device = srcDevice;
@@ -229,9 +243,8 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
     public void connectP2p(WiFiP2pService service) {
-
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = service.device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -241,7 +254,6 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
                         @Override
                         public void onSuccess() {
-
                         }
 
                         @Override
@@ -263,6 +275,24 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         });
     }
 
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case MESSAGE_READ:
+                byte[] readBuf = (byte[]) msg.obj;
+                // construct a string from the valid bytes in the buffer
+                String readMessage = new String(readBuf, 0, msg.arg1);
+                Log.d(TAG, readMessage);
+                //(chatFragment).pushMessage("Buddy: " + readMessage);
+                break;
+
+            case MY_HANDLE:
+                Object obj = msg.obj;
+                //(chatFragment).setChatManager((ChatManager) obj);
+
+        }
+        return true;
+    }
 
     @Override
     public void onResume() {
@@ -279,24 +309,38 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
-
-
+        Thread handler = null;
+        /*
+         * The group owner accepts connections using a server socket and then spawns a
+         * client socket for every client. This is handled by {@code
+         * GroupOwnerSocketHandler}
+         */
 
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
-            appendStatus("Connected as group owner");
-            Toast.makeText(getApplicationContext(), "OWNER", Toast.LENGTH_SHORT).show();
-            // start new group owner socket handler
-
-
+            try {
+                handler = new GroupOwnerSocketHandler(
+                        ((MessageTarget) this).getHandler());
+                handler.start();
+            } catch (IOException e) {
+                Log.d(TAG,
+                        "Failed to create a server thread - " + e.getMessage());
+                return;
+            }
         } else {
             Log.d(TAG, "Connected as peer");
-            appendStatus("Connected as peer");
-            Toast.makeText(getApplicationContext(), "Peer", Toast.LENGTH_SHORT).show();
-            // start new client socket  handler
+            handler = new ClientSocketHandler(
+                    ((MessageTarget) this).getHandler(),
+                    p2pInfo.groupOwnerAddress);
+            handler.start();
         }
+        Intent intent = new Intent(this, GameActivityP2P.class);
 
-
+        startActivity(intent);
+        /*chatFragment = new WiFiChatFragment();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_root, chatFragment).commit();*/
+        //statusTxtView.setVisibility(View.GONE);
     }
 
     public void appendStatus(String status) {

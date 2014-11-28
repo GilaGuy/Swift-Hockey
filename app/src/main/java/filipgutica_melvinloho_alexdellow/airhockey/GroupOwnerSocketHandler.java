@@ -44,11 +44,24 @@ public class GroupOwnerSocketHandler extends Thread {
     @Override
     public void run() {
         while (true) {
+            try {
+                // A blocking operation. Initiate a ChatManager instance when
+                // there is a new connection
+                pool.execute(new ChatManager(socket.accept(), handler));
+                Log.d(TAG, "Launching the I/O handler");
 
-               //pool.shutdownNow();
+            } catch (IOException e) {
+                try {
+                    if (socket != null && !socket.isClosed())
+                        socket.close();
+                } catch (IOException ioe) {
+
+                }
+                e.printStackTrace();
+                pool.shutdownNow();
                 break;
             }
-
+        }
     }
 
 }
