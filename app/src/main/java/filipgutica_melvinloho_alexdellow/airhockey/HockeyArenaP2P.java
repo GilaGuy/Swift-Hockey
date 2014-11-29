@@ -13,12 +13,14 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.nio.ByteBuffer;
 import java.util.Random;
 
 import static filipgutica_melvinloho_alexdellow.airhockey.R.drawable;
@@ -27,7 +29,7 @@ import static filipgutica_melvinloho_alexdellow.airhockey.R.raw;
 /**
  * Created by Filip on 2014-09-15.
  */
-public class HockeyArena extends View
+public class HockeyArenaP2P extends View
 {
     protected static int SCORE_TO_WIN = 5;
     protected static int AI_DIFFICULTY = 1;       // the lower, the more difficult
@@ -39,11 +41,9 @@ public class HockeyArena extends View
 
     protected Bitmap paddle;                      // First Paddle img
     protected Bitmap puck;                        // Puck img
-    protected Bitmap paddle2;                     // Second paddle img
 
-    protected Ball paddleBall2;                   // Second paddle. Ball object to give it Collision detection and trakc speed
-    protected Ball paddleBall;                    // First paddle. "" ""
-    protected Ball puckBall;                      // Puck "" ""
+    protected Ball2 paddleBall;                    // First paddle. "" ""
+    protected Ball2 puckBall;                      // Puck "" ""
 
     protected float paddleWidth;                  // Width of a paddle
     protected float paddleHeight;                 // Height of a paddle
@@ -68,13 +68,16 @@ public class HockeyArena extends View
 
     protected int sound_verynice;
     protected int sound_nevergetthis;
-    protected static int sound_bounces[] = new int[]{};
+    protected static int sound_bounces[];
 
-    public HockeyArena(Context context) {
+    P2PManager p2PManager;
+    public boolean sendLock = false;
+
+    public HockeyArenaP2P(Context context) {
         super(context);
         commonConstructor();
     }
-    public HockeyArena(Context context, AttributeSet attrs) {
+    public HockeyArenaP2P(Context context, AttributeSet attrs) {
         super(context, attrs);
         commonConstructor();
     }
@@ -93,11 +96,10 @@ public class HockeyArena extends View
         handler = new Handler();
 
         paddle = BitmapFactory.decodeResource(getResources(), drawable.funny);
-        paddle2 = BitmapFactory.decodeResource(getResources(), drawable.funny2);
         puck = BitmapFactory.decodeResource(getResources(), drawable.puck);
 
         paddle = getResizedBitmap(paddle, screenWidth/7, screenWidth/7);
-        paddle2 = getResizedBitmap(paddle2, screenWidth/7, screenWidth/7);
+
         puck = getResizedBitmap(puck, screenWidth/15, screenWidth/15);
 
         paddleWidth = paddle.getWidth();
@@ -105,9 +107,9 @@ public class HockeyArena extends View
         puckWidth = puck.getWidth();
         puckHeight = puck.getHeight();
 
-        paddleBall2 = new Ball(paddle2, screenWidth/2, screenHeight * 1/3, (int)(paddleHeight)/2, Ball.type.paddle);
-        paddleBall = new Ball(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball.type.paddle);
-        puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck);
+
+        paddleBall = new Ball2(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball2.type.paddle);
+        puckBall = new Ball2(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball2.type.puck);
 
         rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
         rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
@@ -128,8 +130,8 @@ public class HockeyArena extends View
         mPaint = null;
         handler = null;
 
-        paddleBall = paddleBall2 = puckBall = null;
-        paddle = paddle2 = puck = null;
+        paddleBall = puckBall = null;
+        paddle = puck = null;
         velocity = velocity2 = null;
         Ball.balls.clear();
 
@@ -146,84 +148,43 @@ public class HockeyArena extends View
         switch (m.getActionMasked())
         {
             case MotionEvent.ACTION_DOWN:
-                for (int i = 0; i < m.getPointerCount(); ++i)
-                {
-                    if (m.getY(i) > screenHeight/2)
-                    {
-                        paddleBall.x = m.getX(i);
-                        paddleBall.y = m.getY(i);
-                        paddleBall.speed_x = 0;
-                        paddleBall.speed_y = 0;
 
-                        if (velocity == null) {
-                            // Retrieve a new VelocityTracker object to watch the velocity of a motion.
-                            velocity = VelocityTracker.obtain();
-                            velocity2 = VelocityTracker.obtain();
-                        } else {
-                            // Reset the velocity tracker back to its initial state.
-                            velocity.clear();
-                            velocity2.clear();
-                        }
+                paddleBall.x = m.getX();
+                paddleBall.y = m.getY();
+                paddleBall.speed_x = 0;
+                paddleBall.speed_y = 0;
 
-                        // Add a user's movement to the tracker.
-                        velocity.addMovement(m);
-                        velocity2.addMovement(m);
-                    }
-                    else if (m.getY(i) < screenHeight/2)
-                    {
-                        paddleBall2.x = m.getX(i);
-                        paddleBall2.y = m.getY(i);
-                        paddleBall2.speed_x = 0;
-                        paddleBall2.speed_y = 0;
-
-                        if (velocity2 == null) {
-                            velocity = VelocityTracker.obtain();
-                            velocity2 = VelocityTracker.obtain();
-                        } else {
-                            velocity.clear();
-                            velocity2.clear();
-                        }
-
-                        velocity.addMovement(m);
-                        velocity2.addMovement(m);
-                    }
+                if (velocity == null) {
+                    // Retrieve a new VelocityTracker object to watch the velocity of a motion.
+                    velocity = VelocityTracker.obtain();
+                } else {
+                    // Reset the velocity tracker back to its initial state.
+                    velocity.clear();
                 }
+
+                // Add a user's movement to the tracker.
+                velocity.addMovement(m);
+
+
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                for (int i = 0; i < m.getPointerCount(); ++i)
-                {
-                    if (m.getY(i) > screenHeight/2 + paddleHeight/2)
-                    {
-                        paddleBall.x = m.getX(i);
-                        paddleBall.y = m.getY(i);
-                        //Add movement to tracker
-                        if (velocity != null) {
-                            velocity.addMovement(m);
-                            // When you want to determine the velocity, call
-                            // computeCurrentVelocity(). Then call getXVelocity()
-                            // and getYVelocity() to retrieve the velocity in pixels/10ms
-                            velocity.computeCurrentVelocity(10);
-                            paddleBall.speed_x = velocity.getXVelocity(i);
-                            paddleBall.speed_y = velocity.getYVelocity(i);
-                            paddleBall.detectCollisions();
-                            detectWallCollisions(paddleBall);
-                        }
-                    }
-                    else if (m.getY(i) < screenHeight/2 - paddleHeight/2)
-                    {
-                        paddleBall2.x = m.getX(i);
-                        paddleBall2.y = m.getY(i);
-                        if (velocity2 != null) {
-                            velocity2.addMovement(m);
-                            velocity2.computeCurrentVelocity(10);
-                            paddleBall2.speed_x = velocity2.getXVelocity(i);
-                            paddleBall2.speed_y = velocity2.getYVelocity(i);
-                            paddleBall2.detectCollisions();
-                            detectWallCollisions(paddleBall2);
-                        }
-                    }
+
+                paddleBall.x = m.getX();
+                paddleBall.y = m.getY();
+                //Add movement to tracker
+                if (velocity != null) {
+                    velocity.addMovement(m);
+                    // When you want to determine the velocity, call
+                    // computeCurrentVelocity(). Then call getXVelocity()
+                    // and getYVelocity() to retrieve the velocity in pixels/10ms
+                    velocity.computeCurrentVelocity(10);
+                    paddleBall.speed_x = velocity.getXVelocity();
+                    paddleBall.speed_y = velocity.getYVelocity();
+                    paddleBall.detectCollisions();
+                    detectWallCollisions(paddleBall);
                 }
+
                 break;
         }
 
@@ -243,14 +204,12 @@ public class HockeyArena extends View
         mPaint.setAntiAlias(true);
 
         mPaint.setStrokeWidth(5f);
-        canvas.drawLine(0, screenHeight/2, screenWidth, screenHeight/2, mPaint);
+        canvas.drawLine(0, 0, screenWidth, 0, mPaint);
 
         mPaint.setColor(Color.RED);
         mPaint.setStrokeWidth(20f);
-        canvas.drawLine(screenWidth / 3, 1, screenWidth * 2 / 3, 1, mPaint);
         canvas.drawLine(screenWidth /3, screenHeight - 1, screenWidth * 2/3, screenHeight - 1, mPaint);
 
-        canvas.drawArc(rectFTop, 0, 180, true, mPaint);
         canvas.drawArc(rectFbot, 180, 360, true, mPaint);
 
         mPaint.setColor(Color.BLACK);
@@ -260,33 +219,34 @@ public class HockeyArena extends View
  //       GameActivity.scoreBot.setText(String.valueOf(goalCountBot));
 
         canvas.drawBitmap(puckBall.getBitmap(), puckBall.x - puckWidth/2, puckBall.y - puckWidth/2, mPaint);
-        canvas.drawBitmap(paddleBall2.getBitmap(), paddleBall2.x - paddleWidth / 2, paddleBall2.y - paddleHeight / 2, mPaint);
         canvas.drawBitmap(paddleBall.getBitmap(), paddleBall.x - paddleWidth / 2, paddleBall.y - paddleHeight / 2, mPaint);
 
         invalidate();
     }
 
+    public void setP2PManager(P2PManager obj) {
+        p2PManager = obj;
+    }
+
+    public void updatePuckPosition(float x, float sx, float sy)
+    {
+        puckBall.x = (1 - x) * screenWidth;
+        Log.d("RECEIVED XPOS", "" + puckBall.x);
+        puckBall.y = 0;
+        puckBall.speed_x = sx;
+        puckBall.speed_y = sy;
+    }
+
     protected void loop()
     {
-        for (Ball b : Ball.balls) b.update();
+        for (Ball2 b : Ball2.ballsP2P) b.update();
 
-        for (Ball b : Ball.balls) b.detectCollisions();
+        for (Ball2 b : Ball2.ballsP2P) b.detectCollisions();
 
         detectWallCollisions(paddleBall);
-        detectWallCollisions(paddleBall2);
 
         if (!scored) {
             detectWallCollisions(puckBall);
-        }
-
-        if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
-            paddleBall.y = screenHeight / 2 + paddleHeight / 2;
-            paddleBall.speed_y = Math.abs(paddleBall.speed_y);
-        }
-
-        if (paddleBall2.y > screenHeight/2 - paddleHeight/2) {
-            paddleBall2.y = screenHeight / 2 - paddleHeight / 2;
-            paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
 
         if (goalCountBot >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
@@ -294,13 +254,11 @@ public class HockeyArena extends View
                 @Override
                 public void run()
                 {
-                    for (Ball b : Ball.balls) clearVelocity(b);
+                    for (Ball2 b : Ball2.ballsP2P) clearVelocity(b);
 
                     puckBall.x = screenWidth/2;
                     puckBall.y = screenHeight/2;
 
-                    paddleBall2.x = screenWidth/2;
-                    paddleBall2.y = screenHeight * 1/3;
                     paddleBall.x = screenWidth/2;
                     paddleBall.y =  screenHeight * 2/3;
 
@@ -311,7 +269,7 @@ public class HockeyArena extends View
         }
     }
 
-    protected void detectWallCollisions(final Ball b)
+    protected void detectWallCollisions(final Ball2 b)
     {
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
@@ -331,55 +289,40 @@ public class HockeyArena extends View
         }
 
         //paddle hits top wall
-        if (b.y < 0 + b.ballRadius/2) {
+        if (b.y < 0 - b.ballRadius) {
 
-            if (b.getType() == Ball.type.paddle) {
+            if (b.getType() == Ball2.type.paddle) {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
 
                 sfx_bounce(b);
             }
-
-            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
-                b.speed_y = Math.abs(b.speed_y);
-                b.y = 0 + b.ballRadius / 2;
-
-                sfx_bounce(b);
-            }
-            else if (b.y < 0 - b.ballRadius)
-            {
-                //Goal scored
-                sp.play(sound_nevergetthis, 1, 1, 0, 0, 1);
-
-                goalCountBot++;
-                scored = true;
-                b.speed_x = 0;
-                b.speed_y = 0;
-                b.x = getWidth() * 2;
-                b.y = getHeight() * 2;
-
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        resetPuck();
-
-                        b.y = b.y - screenHeight/8;
-
-                        scored = false;
+            else if ( b.getType() == Ball2.type.puck) {
+                if (!sendLock) {
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(12);
+                    Log.d("SENT XPOS", "" + puckBall.x);
+                    byteBuffer.putFloat(puckBall.x/screenWidth);
+                    byteBuffer.putFloat(puckBall.speed_x);
+                    byteBuffer.putFloat(puckBall.speed_y);
+                    if (p2PManager != null) {
+                        p2PManager.write(byteBuffer.array());
+                        WiFiServiceDiscoveryActivity.receiveLock = false;
                     }
-                }, TIME_OUT);
+                    sendLock = true;
+                }
             }
+
 
         //paddle hits bottom wall
         } else if (b.y > getHeight() - b.ballRadius/2) {
 
-            if (b.getType() == Ball.type.paddle) {
+            if (b.getType() == Ball2.type.paddle) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
 
                 sfx_bounce(b);
             }
-            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
+            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball2.type.puck) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
 
@@ -411,7 +354,7 @@ public class HockeyArena extends View
         }
     }
 
-    protected void clearVelocity(Ball b) {
+    protected void clearVelocity(Ball2 b) {
         b.speed_x = 0;
         b.speed_y = 0;
     }
@@ -436,16 +379,8 @@ public class HockeyArena extends View
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
-
-    protected float getDistanceX(Ball b1, Ball b2) {
-        return b1.x - b2.x;
-    }
-
-    protected float getDistanceY(Ball b1, Ball b2) {
-        return b1.y - b2.y;
-    }
     
-    protected static void sfx_bounce(Ball b) {
+    protected static void sfx_bounce(Ball2 b) {
         float volumex = Math.abs(b.speed_x) / Ball.MAX_SPEED.x;
         float volumey = Math.abs(b.speed_y) / Ball.MAX_SPEED.y;
         float volume_final = Math.max(volumex, volumey);

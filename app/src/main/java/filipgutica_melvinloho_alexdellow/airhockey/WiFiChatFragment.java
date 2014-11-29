@@ -22,7 +22,7 @@ import java.util.List;
 public class WiFiChatFragment extends Fragment {
 
     private View view;
-    private ChatManager chatManager;
+    private P2PManager p2PManager;
     private TextView chatLine;
     private ListView listView;
     ChatMessageAdapter adapter = null;
@@ -42,8 +42,8 @@ public class WiFiChatFragment extends Fragment {
 
                     @Override
                     public void onClick(View arg0) {
-                        if (chatManager != null) {
-                            chatManager.write(chatLine.getText().toString()
+                        if (p2PManager != null) {
+                            p2PManager.write(chatLine.getText().toString()
                                     .getBytes());
                             pushMessage("Me: " + chatLine.getText().toString());
                             chatLine.setText("");
@@ -58,8 +58,8 @@ public class WiFiChatFragment extends Fragment {
         public Handler getHandler();
     }
 
-    public void setChatManager(ChatManager obj) {
-        chatManager = obj;
+    public void setP2PManager(P2PManager obj) {
+        p2PManager = obj;
     }
 
     public void pushMessage(String readMessage) {

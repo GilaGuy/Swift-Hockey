@@ -47,7 +47,7 @@ public class GroupOwnerSocketHandler extends Thread {
             try {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
-                pool.execute(new ChatManager(socket.accept(), handler));
+                pool.execute(new P2PManager(socket.accept(), handler));
                 Log.d(TAG, "Launching the I/O handler");
 
             } catch (IOException e) {

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -26,6 +25,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,12 +66,17 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     private BroadcastReceiver receiver = null;
     private WifiP2pDnsSdServiceRequest serviceRequest;
 
+
     private Handler handler = new Handler(this);
     private WiFiChatFragment chatFragment;
 
     private WiFiDirectServicesList servicesList;
 
     private TextView statusTxtView;
+
+    public static boolean receiveLock = false;
+
+    private HockeyArenaP2P ha;
 
     public Handler getHandler() {
         return handler;
@@ -280,15 +285,33 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         switch (msg.what) {
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
-                // construct a string from the valid bytes in the buffer
-                String readMessage = new String(readBuf, 0, msg.arg1);
-                Log.d(TAG, readMessage);
-                //(chatFragment).pushMessage("Buddy: " + readMessage);
+
+                ByteBuffer byteBuffer = ByteBuffer.wrap(readBuf);
+                float xPos = byteBuffer.getFloat();
+
+                float xSpeed = byteBuffer.getFloat();
+                float ySpeed = byteBuffer.getFloat();
+
+                if (!receiveLock)
+                {
+                    xSpeed *= -1;
+                    ySpeed *= -1;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Log.d(TAG, "XPOS: " + xPos);
+                    (ha).updatePuckPosition(xPos ,xSpeed, ySpeed);
+                    (ha).sendLock = false;
+                    //(chatFragment).pushMessage("Buddy: " + readMessage);
+                    receiveLock = true;
+                }
+
+
+
                 break;
 
             case MY_HANDLE:
                 Object obj = msg.obj;
-                //(chatFragment).setChatManager((ChatManager) obj);
+                ((HockeyArenaP2P)ha).setP2PManager((P2PManager) obj);
 
         }
         return true;
@@ -334,9 +357,12 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                     p2pInfo.groupOwnerAddress);
             handler.start();
         }
-        Intent intent = new Intent(this, GameActivityP2P.class);
+        //Intent intent = new Intent(this, GameActivityP2P.class);
 
-        startActivity(intent);
+        //startActivity(intent);
+
+        ha = new HockeyArenaP2P(getApplicationContext());
+        this.setContentView(ha);
         /*chatFragment = new WiFiChatFragment();
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_root, chatFragment).commit();*/

@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_waiting_loop);
+        mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_game_loop);
         mp.setLooping(true);
         mp.start();
     }
