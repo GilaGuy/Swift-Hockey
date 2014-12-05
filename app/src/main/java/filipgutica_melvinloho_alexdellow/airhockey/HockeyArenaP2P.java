@@ -82,6 +82,10 @@ public class HockeyArenaP2P extends View
         commonConstructor();
     }
 
+    public interface MessageTarget {
+        public Handler getHandler();
+    }
+
     protected void commonConstructor() {
         cleanUp();
         

@@ -29,7 +29,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import filipgutica_melvinloho_alexdellow.airhockey.WiFiChatFragment.MessageTarget;
+import filipgutica_melvinloho_alexdellow.airhockey.HockeyArenaP2P.MessageTarget;
 import filipgutica_melvinloho_alexdellow.airhockey.WiFiDirectServicesList.DeviceClickListener;
 import filipgutica_melvinloho_alexdellow.airhockey.WiFiDirectServicesList.WiFiDevicesAdapter;
 
@@ -68,7 +68,6 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
 
     private Handler handler = new Handler(this);
-    private WiFiChatFragment chatFragment;
 
     private WiFiDirectServicesList servicesList;
 
@@ -82,9 +81,6 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         return handler;
     }
 
-    public void setHandler(Handler handler) {
-        this.handler = handler;
-    }
 
     /** Called when the activity is first created. */
     @Override
@@ -95,10 +91,8 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        intentFilter
-                .addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        intentFilter
-                .addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
@@ -193,6 +187,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                                 service.device = srcDevice;
                                 service.instanceName = instanceName;
                                 service.serviceRegistrationType = registrationType;
+                                adapter.clear();
                                 adapter.add(service);
                                 adapter.notifyDataSetChanged();
                                 Log.d(TAG, "onBonjourServiceAvailable "
@@ -208,12 +203,10 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                      * buddy name.
                      */
                     @Override
-                    public void onDnsSdTxtRecordAvailable(
-                            String fullDomainName, Map<String, String> record,
-                            WifiP2pDevice device) {
-                        Log.d(TAG,
-                                device.deviceName + " is "
-                                        + record.get(TXTRECORD_PROP_AVAILABLE));
+                    public void onDnsSdTxtRecordAvailable(String fullDomainName,
+                                                          Map<String, String> record,
+                                                          WifiP2pDevice device) {
+                        Log.d(TAG,device.deviceName + " is " + record.get(TXTRECORD_PROP_AVAILABLE));
                     }
                 });
 
@@ -296,12 +289,9 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
                 {
                     xSpeed *= -1;
                     ySpeed *= -1;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    Log.d(TAG, "XPOS: " + xPos);
-                    (ha).updatePuckPosition(xPos ,xSpeed, ySpeed);
-                    (ha).sendLock = false;
-                    //(chatFragment).pushMessage("Buddy: " + readMessage);
+                 
+                    ha.updatePuckPosition(xPos ,xSpeed, ySpeed);
+                    ha.sendLock = false;
                     receiveLock = true;
                 }
 
@@ -311,7 +301,7 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
             case MY_HANDLE:
                 Object obj = msg.obj;
-                ((HockeyArenaP2P)ha).setP2PManager((P2PManager) obj);
+                ha.setP2PManager((P2PManager) obj);
 
         }
         return true;
@@ -342,31 +332,23 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         if (p2pInfo.isGroupOwner) {
             Log.d(TAG, "Connected as group owner");
             try {
-                handler = new GroupOwnerSocketHandler(
-                        ((MessageTarget) this).getHandler());
+                handler = new GroupOwnerSocketHandler(this.getHandler());
                 handler.start();
             } catch (IOException e) {
-                Log.d(TAG,
-                        "Failed to create a server thread - " + e.getMessage());
+                Log.d(TAG, "Failed to create a server thread - " + e.getMessage());
                 return;
             }
         } else {
             Log.d(TAG, "Connected as peer");
             handler = new ClientSocketHandler(
-                    ((MessageTarget) this).getHandler(),
+                    this.getHandler(),
                     p2pInfo.groupOwnerAddress);
             handler.start();
         }
-        //Intent intent = new Intent(this, GameActivityP2P.class);
 
-        //startActivity(intent);
-
+        //Start the hockey arena
         ha = new HockeyArenaP2P(getApplicationContext());
         this.setContentView(ha);
-        /*chatFragment = new WiFiChatFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container_root, chatFragment).commit();*/
-        //statusTxtView.setVisibility(View.GONE);
     }
 
     public void appendStatus(String status) {

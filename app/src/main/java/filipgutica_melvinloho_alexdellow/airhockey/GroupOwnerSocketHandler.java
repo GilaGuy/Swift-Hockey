@@ -24,6 +24,7 @@ public class GroupOwnerSocketHandler extends Thread {
     public GroupOwnerSocketHandler(Handler handler) throws IOException {
         try {
             socket = new ServerSocket(4545);
+            socket.setReuseAddress(true);
             this.handler = handler;
             Log.d("GroupOwnerSocketHandler", "Socket Started");
         } catch (IOException e) {
@@ -45,15 +46,16 @@ public class GroupOwnerSocketHandler extends Thread {
     public void run() {
         while (true) {
             try {
-                // A blocking operation. Initiate a ChatManager instance when
+                // A blocking operation. Initiate a P2Parena instance when
                 // there is a new connection
                 pool.execute(new P2PManager(socket.accept(), handler));
                 Log.d(TAG, "Launching the I/O handler");
 
             } catch (IOException e) {
                 try {
-                    if (socket != null && !socket.isClosed())
+                    if (socket != null && !socket.isClosed()) {
                         socket.close();
+                    }
                 } catch (IOException ioe) {
 
                 }

@@ -45,8 +45,7 @@ public class WiFiDirectServicesList extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // TODO Auto-generated method stub
-        ((DeviceClickListener) getActivity()).connectP2p((WiFiP2pService) l
-                .getItemAtPosition(position));
+        ((DeviceClickListener) getActivity()).connectP2p((WiFiP2pService) l.getItemAtPosition(position));
         ((TextView) v.findViewById(android.R.id.text2)).setText("Connecting");
 
     }
@@ -65,20 +64,17 @@ public class WiFiDirectServicesList extends ListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;
             if (v == null) {
-                LayoutInflater vi = (LayoutInflater) getActivity()
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(android.R.layout.simple_list_item_2, null);
             }
             WiFiP2pService service = items.get(position);
             if (service != null) {
-                TextView nameText = (TextView) v
-                        .findViewById(android.R.id.text1);
+                TextView nameText = (TextView) v.findViewById(android.R.id.text1);
 
                 if (nameText != null) {
                     nameText.setText(service.device.deviceName + " - " + service.instanceName);
                 }
-                TextView statusText = (TextView) v
-                        .findViewById(android.R.id.text2);
+                TextView statusText = (TextView) v.findViewById(android.R.id.text2);
                 statusText.setText(getDeviceStatus(service.device.status));
             }
             return v;
