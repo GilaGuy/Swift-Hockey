@@ -59,6 +59,7 @@ public class GroupOwnerSocketHandler extends Thread {
                 } catch (IOException ioe) {
 
                 }
+
                 e.printStackTrace();
                 pool.shutdownNow();
                 break;

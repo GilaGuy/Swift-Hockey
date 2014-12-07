@@ -9,8 +9,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -21,10 +19,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.nio.ByteBuffer;
-import java.util.Random;
 
 import static filipgutica_melvinloho_alexdellow.airhockey.R.drawable;
-import static filipgutica_melvinloho_alexdellow.airhockey.R.raw;
 
 /**
  * Created by Filip on 2014-09-15.
@@ -34,7 +30,6 @@ public class HockeyArenaP2P extends View
     protected static int SCORE_TO_WIN = 5;
     protected static int AI_DIFFICULTY = 1;       // the lower, the more difficult
     protected static long TIME_OUT = 4000;
-    protected static Random rand = new Random();
 
     protected Paint mPaint;                       // Paint to draw set color etc...
     protected Handler handler;                    // Handles delayed events
@@ -42,8 +37,8 @@ public class HockeyArenaP2P extends View
     protected Bitmap paddle;                      // First Paddle img
     protected Bitmap puck;                        // Puck img
 
-    protected Ball2 paddleBall;                    // First paddle. "" ""
-    protected Ball2 puckBall;                      // Puck "" ""
+    protected Ball paddleBall;                    // First paddle. "" ""
+    protected Ball puckBall;                      // Puck "" ""
 
     protected float paddleWidth;                  // Width of a paddle
     protected float paddleHeight;                 // Height of a paddle
@@ -64,12 +59,6 @@ public class HockeyArenaP2P extends View
     private RectF rectFTop;
     private RectF rectFbot;
 
-    protected static SoundPool sp;
-
-    protected int sound_verynice;
-    protected int sound_nevergetthis;
-    protected static int sound_bounces[];
-
     P2PManager p2PManager;
     public boolean sendLock = false;
 
@@ -88,6 +77,8 @@ public class HockeyArenaP2P extends View
 
     protected void commonConstructor() {
         cleanUp();
+
+        SoundEffects.initSounds(this);
         
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -112,22 +103,14 @@ public class HockeyArenaP2P extends View
         puckHeight = puck.getHeight();
 
 
-        paddleBall = new Ball2(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball2.type.paddle);
-        puckBall = new Ball2(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball2.type.puck);
+        paddleBall = new Ball(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball.type.paddle);
+        puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck);
 
         rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
         rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
 
-        sp = new SoundPool(24, AudioManager.STREAM_MUSIC, 0);
 
-        sound_verynice = sp.load(getContext(), raw.verynice, 1);
-        sound_nevergetthis = sp.load(getContext(), raw.nevergetthis, 1);
-        sound_bounces = new int[] {
-                sp.load(getContext(), raw.bounce_01, 1),
-                sp.load(getContext(), raw.bounce_02, 1),
-                sp.load(getContext(), raw.bounce_03, 1),
-                sp.load(getContext(), raw.bounce_04, 1)
-        };
+
     }
 
     protected void cleanUp() {
@@ -143,7 +126,7 @@ public class HockeyArenaP2P extends View
         goalCountTop = 0;
         scored = false;
 
-        if (sp != null) sp.release();
+
     }
 
     @Override
@@ -243,9 +226,9 @@ public class HockeyArenaP2P extends View
 
     protected void loop()
     {
-        for (Ball2 b : Ball2.ballsP2P) b.update();
+        for (Ball b : Ball.balls) b.update();
 
-        for (Ball2 b : Ball2.ballsP2P) b.detectCollisions();
+        for (Ball b : Ball.balls) b.detectCollisions();
 
         detectWallCollisions(paddleBall);
 
@@ -258,7 +241,7 @@ public class HockeyArenaP2P extends View
                 @Override
                 public void run()
                 {
-                    for (Ball2 b : Ball2.ballsP2P) clearVelocity(b);
+                    for (Ball b : Ball.balls) clearVelocity(b);
 
                     puckBall.x = screenWidth/2;
                     puckBall.y = screenHeight/2;
@@ -273,7 +256,7 @@ public class HockeyArenaP2P extends View
         }
     }
 
-    protected void detectWallCollisions(final Ball2 b)
+    protected void detectWallCollisions(final Ball b)
     {
         //when paddle hits left wall
         if (b.x < 0 + b.ballRadius/2) {
@@ -281,7 +264,7 @@ public class HockeyArenaP2P extends View
             b.speed_x = Math.abs(b.speed_x);
             b.x = 0 + b.ballRadius/2 ;
 
-            sfx_bounce(b);
+            SoundEffects.sfx_bounce(b);
 
         //when paddle hits right wall
         } else if ( b.x > getWidth()- b.ballRadius/2) {
@@ -289,19 +272,19 @@ public class HockeyArenaP2P extends View
             b.speed_x= -Math.abs(b.speed_x);
             b.x = getWidth() - b.ballRadius/2;
 
-            sfx_bounce(b);
+            SoundEffects.sfx_bounce(b);
         }
 
         //paddle hits top wall
         if (b.y < 0 - b.ballRadius) {
 
-            if (b.getType() == Ball2.type.paddle) {
+            if (b.getType() == Ball.type.paddle) {
                 b.speed_y = Math.abs(b.speed_y);
                 b.y = 0 + b.ballRadius / 2;
 
-                sfx_bounce(b);
+                SoundEffects.sfx_bounce(b);
             }
-            else if ( b.getType() == Ball2.type.puck) {
+            else if ( b.getType() == Ball.type.puck) {
                 if (!sendLock) {
                     ByteBuffer byteBuffer = ByteBuffer.allocate(12);
                     Log.d("SENT XPOS", "" + puckBall.x);
@@ -320,22 +303,22 @@ public class HockeyArenaP2P extends View
         //paddle hits bottom wall
         } else if (b.y > getHeight() - b.ballRadius/2) {
 
-            if (b.getType() == Ball2.type.paddle) {
+            if (b.getType() == Ball.type.paddle) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
 
-                sfx_bounce(b);
+                SoundEffects.sfx_bounce(b);
             }
-            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball2.type.puck) {
+            else if (b.x < getWidth() /3 || b.x > getWidth() * 2/3 && b.getType() == Ball.type.puck) {
                 b.speed_y = -Math.abs(b.speed_y);
                 b.y = getHeight() - b.ballRadius / 2;
 
-                sfx_bounce(b);
+                SoundEffects.sfx_bounce(b);
             }
             else if (b.y > getHeight() + b.ballRadius)
             {
                 //Goal scored
-                sp.play(sound_verynice, 1, 1, 0, 0, 1);
+                SoundEffects.sfx_verynice();
 
                 goalCountTop++;
                 scored = true;
@@ -358,7 +341,7 @@ public class HockeyArenaP2P extends View
         }
     }
 
-    protected void clearVelocity(Ball2 b) {
+    protected void clearVelocity(Ball b) {
         b.speed_x = 0;
         b.speed_y = 0;
     }
@@ -384,14 +367,7 @@ public class HockeyArenaP2P extends View
         return resizedBitmap;
     }
     
-    protected static void sfx_bounce(Ball2 b) {
-        float volumex = Math.abs(b.speed_x) / Ball.MAX_SPEED.x;
-        float volumey = Math.abs(b.speed_y) / Ball.MAX_SPEED.y;
-        float volume_final = Math.max(volumex, volumey);
 
-        if (volume_final > 0.3)
-            sp.play(sound_bounces[rand.nextInt(sound_bounces.length)],
-                    volume_final, volume_final,
-                    0, 0, 1);
-    }
+
+
 }

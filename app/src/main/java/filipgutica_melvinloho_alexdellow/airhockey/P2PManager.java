@@ -53,9 +53,12 @@ public class P2PManager implements Runnable {
                     Log.e(TAG, "disconnected", e);
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
                 socket.close();
             } catch (IOException e) {

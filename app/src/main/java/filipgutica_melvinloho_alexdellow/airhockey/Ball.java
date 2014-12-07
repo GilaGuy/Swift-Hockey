@@ -18,6 +18,7 @@ public class Ball {
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
 
+
     enum type {
         puck, paddle
     }
@@ -39,7 +40,6 @@ public class Ball {
         ballRadius = rad;
         curBall = img;
         balls.add(this);
-
         bType = t;
 
     }
@@ -69,7 +69,7 @@ public class Ball {
                         && y < b.y + ballRadius + b.ballRadius) {
                     if (distanceTo(this, b) < ballRadius + b.ballRadius) {
                         calculateNewVelocities(this, b);
-                        HockeyArena.sfx_bounce(b);
+                        SoundEffects.sfx_bounce(b);
                     }
                 }
             }
