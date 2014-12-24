@@ -1,5 +1,5 @@
 
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey.wificonn;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -29,9 +29,11 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import filipgutica_melvinloho_alexdellow.airhockey.HockeyArenaP2P.MessageTarget;
-import filipgutica_melvinloho_alexdellow.airhockey.WiFiDirectServicesList.DeviceClickListener;
-import filipgutica_melvinloho_alexdellow.airhockey.WiFiDirectServicesList.WiFiDevicesAdapter;
+import insertcreativecompanynamehere.swifthockey.HockeyArenaP2P;
+import insertcreativecompanynamehere.swifthockey.HockeyArenaP2P.MessageTarget;
+import insertcreativecompanynamehere.swifthockey.R;
+import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList.DeviceClickListener;
+import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList.WiFiDevicesAdapter;
 
 /**
  * The main activity for the sample. This activity registers a local service and

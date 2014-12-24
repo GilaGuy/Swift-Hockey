@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".GameActivityAI">
 
-    <filipgutica_melvinloho_alexdellow.airhockey.HockeyArenaAI
+    <insertcreativecompanynamehere.swifthockey.HockeyArenaAI
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/arena"/>

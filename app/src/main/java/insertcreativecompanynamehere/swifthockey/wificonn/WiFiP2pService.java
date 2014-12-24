@@ -1,5 +1,5 @@
 
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey.wificonn;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 

@@ -1,5 +1,5 @@
 
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey.wificonn;
 
 import android.app.ListFragment;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import insertcreativecompanynamehere.swifthockey.R;
 
 /**
  * A simple ListFragment that shows the available services as published by the

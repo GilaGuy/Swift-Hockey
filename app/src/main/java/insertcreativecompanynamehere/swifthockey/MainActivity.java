@@ -1,4 +1,4 @@
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import insertcreativecompanynamehere.swifthockey.wificonn.WiFiServiceDiscoveryActivity;
 
 
 public class MainActivity extends Activity {

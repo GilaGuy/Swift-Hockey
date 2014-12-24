@@ -1,4 +1,4 @@
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey;
 
 import android.content.Context;
 import android.util.AttributeSet;

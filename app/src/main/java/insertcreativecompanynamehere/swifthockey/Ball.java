@@ -1,4 +1,4 @@
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -69,7 +69,7 @@ public class Ball {
                         && y < b.y + ballRadius + b.ballRadius) {
                     if (distanceTo(this, b) < ballRadius + b.ballRadius) {
                         calculateNewVelocities(this, b);
-                        SoundEffects.sfx_bounce(b);
+                        SFXManager.sfx_bounce(b);
                     }
                 }
             }

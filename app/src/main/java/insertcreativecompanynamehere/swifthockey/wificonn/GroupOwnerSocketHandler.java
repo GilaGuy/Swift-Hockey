@@ -1,5 +1,5 @@
 
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey.wificonn;
 
 import android.os.Handler;
 import android.util.Log;

@@ -1,5 +1,5 @@
 
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey.wificonn;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project

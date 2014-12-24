@@ -1,4 +1,4 @@
-package filipgutica_melvinloho_alexdellow.airhockey;
+package insertcreativecompanynamehere.swifthockey;
 
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Created by Filip on 2014-12-05.
  */
-public class SoundEffects {
+public class SFXManager {
 
     protected static SoundPool sp;
     protected static int sound_verynice;
