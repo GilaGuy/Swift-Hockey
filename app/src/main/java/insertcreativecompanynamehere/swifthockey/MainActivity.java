@@ -12,21 +12,17 @@ import insertcreativecompanynamehere.swifthockey.wificonn.WiFiServiceDiscoveryAc
 
 
 public class MainActivity extends Activity {
-
-    private MediaPlayer mp;
+    private MediaPlayer mp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_game_loop);
-        mp.setLooping(true);
-        mp.start();
+        startMusic();
     }
 
-    public void onClickTwoPlayer(View v)
-    {
+    public void onClickTwoPlayer(View v) {
         Intent intent = new Intent(this, GameActivity.class);
 
         startActivity(intent);
@@ -64,15 +60,24 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopMusic();
+    public void onResume() {
+        super.onResume();
+        startMusic();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopMusic();
+    }
+
+    public void startMusic() {
+        if (mp == null) {
+            mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_game_loop);
+            mp.setLooping(true);
+        }
+
+        mp.start();
     }
 
     public void stopMusic() {
