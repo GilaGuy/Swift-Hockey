@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-
 public class GameActivitySP extends Activity {
 
     public static final int TYPE_2P = 0;

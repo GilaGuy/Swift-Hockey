@@ -70,7 +70,7 @@ public class HockeyArenaSP2P extends View
         commonConstructor();
     }
 
-    protected void commonConstructor() {
+    private void commonConstructor() {
         cleanUp();
 
         SFXManager.initSounds(this);

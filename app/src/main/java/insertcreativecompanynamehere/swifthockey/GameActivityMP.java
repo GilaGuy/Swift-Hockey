@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ import insertcreativecompanynamehere.swifthockey.wificonn.WiFiP2pService;
  * {@code WiFiChatFragment} is then added to the the main activity which manages
  * the interface and messaging needs for a chat session.
  */
-public class GameActivityMP extends Activity implements
+public class GameActivityMP extends GameActivitySP implements
         DeviceClickListener, Handler.Callback, MessageTarget,
         ConnectionInfoListener {
 
@@ -351,8 +352,9 @@ public class GameActivityMP extends Activity implements
         }
 
         //Start the hockey arena
-        ha = new HockeyArenaMP(getApplicationContext());
-        setContentView(ha);
+        setContentView(R.layout.activity_game);
+        FrameLayout hockeyArenaContainer = ((FrameLayout)findViewById(R.id.hockeyArenaContainer));
+        hockeyArenaContainer.addView(new HockeyArenaMP(getApplicationContext()));
     }
 
     public void appendStatus(String status) {

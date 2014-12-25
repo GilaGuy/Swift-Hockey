@@ -77,7 +77,7 @@ public class HockeyArenaMP extends View
         public Handler getHandler();
     }
 
-    protected void commonConstructor() {
+    private void commonConstructor() {
         cleanUp();
 
         SFXManager.initSounds(this);
@@ -104,15 +104,11 @@ public class HockeyArenaMP extends View
         puckWidth = puck.getWidth();
         puckHeight = puck.getHeight();
 
-
         paddleBall = new Ball(paddle, screenWidth/2, screenHeight * 2/3, (int) (paddleHeight/2), Ball.type.paddle);
         puckBall = new Ball(puck, screenWidth/2, screenHeight/2, (int)(puckWidth/2), Ball.type.puck);
 
         rectFTop = new RectF(screenWidth / 3, -(screenWidth /6), screenWidth * 2 / 3, screenWidth /6);
         rectFbot = new RectF(screenWidth / 3, screenHeight - (screenWidth /6), screenWidth * 2 / 3, screenHeight + (screenWidth /6));
-
-
-
     }
 
     protected void cleanUp() {
@@ -127,8 +123,6 @@ public class HockeyArenaMP extends View
         goalCountBot = 0;
         goalCountTop = 0;
         scored = false;
-
-
     }
 
     @Override
@@ -368,8 +362,4 @@ public class HockeyArenaMP extends View
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
-    
-
-
-
 }

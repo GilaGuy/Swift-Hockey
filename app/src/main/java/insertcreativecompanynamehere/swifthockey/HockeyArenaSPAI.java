@@ -12,9 +12,15 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
 {
     public HockeyArenaSPAI(Context context) {
         super(context);
+        commonConstructor();
     }
     public HockeyArenaSPAI(Context context, AttributeSet attrs) {
         super(context, attrs);
+        commonConstructor();
+    }
+    
+    private void commonConstructor() {
+        GameActivitySP.scoreTop.setRotation(0);
     }
 
     @Override
