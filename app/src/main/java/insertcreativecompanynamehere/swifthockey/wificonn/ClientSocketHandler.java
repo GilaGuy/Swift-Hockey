@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import insertcreativecompanynamehere.swifthockey.GameActivityMP;
+
 public class ClientSocketHandler extends Thread {
 
     private static final String TAG = "ClientSocketHandler";
@@ -27,7 +29,7 @@ public class ClientSocketHandler extends Thread {
         try {
             socket.bind(null);
             socket.connect(new InetSocketAddress(mAddress.getHostAddress(),
-                    WiFiServiceDiscoveryActivity.SERVER_PORT), 5000);
+                    GameActivityMP.SERVER_PORT), 5000);
             Log.d(TAG, "Launching the I/O handler");
             chat = new P2PManager(socket, handler);
             new Thread(chat).start();

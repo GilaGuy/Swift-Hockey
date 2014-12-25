@@ -8,15 +8,13 @@ import android.view.VelocityTracker;
 /**
  * Created by Filip on 2014-09-15.
  */
-public class HockeyArenaAI extends HockeyArena
+public class HockeyArenaSPAI extends HockeyArenaSP2P
 {
-    public HockeyArenaAI(Context context) {
+    public HockeyArenaSPAI(Context context) {
         super(context);
-        commonConstructor();
     }
-    public HockeyArenaAI(Context context, AttributeSet attrs) {
+    public HockeyArenaSPAI(Context context, AttributeSet attrs) {
         super(context, attrs);
-        commonConstructor();
     }
 
     @Override

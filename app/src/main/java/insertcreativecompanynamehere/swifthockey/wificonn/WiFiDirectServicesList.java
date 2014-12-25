@@ -25,7 +25,7 @@ public class WiFiDirectServicesList extends ListFragment {
 
     WiFiDevicesAdapter listAdapter = null;
 
-    interface DeviceClickListener {
+    public interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService);
     }
 

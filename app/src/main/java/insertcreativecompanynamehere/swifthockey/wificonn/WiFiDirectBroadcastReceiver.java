@@ -28,6 +28,8 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.util.Log;
 
+import insertcreativecompanynamehere.swifthockey.GameActivityMP;
+
 /**
  * A BroadcastReceiver that notifies of important wifi p2p events.
  */
@@ -58,7 +60,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        Log.d(WiFiServiceDiscoveryActivity.TAG, action);
+        Log.d(GameActivityMP.TAG, action);
 
         if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
@@ -73,7 +75,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-                Log.d(WiFiServiceDiscoveryActivity.TAG,
+                Log.d(GameActivityMP.TAG,
                         "Connected to p2p network. Requesting network details");
                 manager.requestConnectionInfo(channel, (ConnectionInfoListener) activity);
             } else {
@@ -82,7 +84,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
             WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-            Log.d(WiFiServiceDiscoveryActivity.TAG, "Device status -" + device.status);
+            Log.d(GameActivityMP.TAG, "Device status -" + device.status);
 
         }
     }

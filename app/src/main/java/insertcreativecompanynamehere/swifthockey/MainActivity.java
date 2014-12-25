@@ -8,8 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import insertcreativecompanynamehere.swifthockey.wificonn.WiFiServiceDiscoveryActivity;
-
 
 public class MainActivity extends Activity {
     private MediaPlayer mp = null;
@@ -22,20 +20,25 @@ public class MainActivity extends Activity {
         startMusic();
     }
 
-    public void onClickTwoPlayer(View v) {
-        Intent intent = new Intent(this, GameActivity.class);
+    public void onClickGameMode(View v) {
+        Intent intent;
 
-        startActivity(intent);
-    }
-
-    public void onClickMultiPlay(View v) {
-        Intent intent = new Intent(this, WiFiServiceDiscoveryActivity.class);
-
-        startActivity(intent);
-    }
-
-    public void onClickAI(View v) {
-        Intent intent = new Intent(this, GameActivityAI.class);
+        switch (v.getId())
+        {
+            case R.id.btn_gamemode_twoPlayer:
+                intent = new Intent(this, GameActivitySP.class);
+                intent.putExtra(GameActivitySP.TYPE, GameActivitySP.TYPE_2P);
+                break;
+            case R.id.btn_gamemode_AI:
+                intent = new Intent(this, GameActivitySP.class);
+                intent.putExtra(GameActivitySP.TYPE, GameActivitySP.TYPE_AI);
+                break;
+            case R.id.btn_gamemode_multiPlayer:
+                intent = new Intent(this, GameActivityMP.class);
+                break;
+            default:
+                return;
+        }
 
         startActivity(intent);
     }
@@ -62,22 +65,37 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+
         startMusic();
     }
 
     @Override
     public void onPause() {
+        pauseMusic();
+
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
         stopMusic();
+
+        super.onStop();
     }
 
     public void startMusic() {
         if (mp == null) {
-            mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_game_loop);
+            mp = MediaPlayer.create(getApplicationContext(), R.raw.bgm_waiting_loop);
             mp.setLooping(true);
         }
 
         mp.start();
+    }
+
+    public void pauseMusic() {
+        if(mp != null && mp.isPlaying()) {
+            mp.pause();
+        }
     }
 
     public void stopMusic() {

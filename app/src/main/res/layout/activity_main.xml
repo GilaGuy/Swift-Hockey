@@ -9,29 +9,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Two Player"
-        android:id="@+id/twoPlayer"
+        android:id="@+id/btn_gamemode_twoPlayer"
         android:layout_marginTop="148dp"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/multiPlayer"
-        android:onClick="onClickTwoPlayer" />
+        android:layout_alignStart="@+id/btn_gamemode_multiPlayer"
+        android:onClick="onClickGameMode" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Multiplayer"
-        android:id="@+id/multiPlayer"
-        android:layout_below="@+id/twoPlayer"
+        android:id="@+id/btn_gamemode_multiPlayer"
+        android:layout_below="@+id/btn_gamemode_twoPlayer"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
-        android:onClick="onClickMultiPlay" />
+        android:onClick="onClickGameMode" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Versus AI"
-        android:id="@+id/btnAI"
-        android:layout_below="@+id/twoPlayer"
-        android:layout_alignStart="@+id/multiPlayer"
-        android:layout_alignEnd="@+id/twoPlayer"
-        android:onClick="onClickAI" />
+        android:id="@+id/btn_gamemode_AI"
+        android:layout_below="@+id/btn_gamemode_twoPlayer"
+        android:layout_alignStart="@+id/btn_gamemode_multiPlayer"
+        android:layout_alignEnd="@+id/btn_gamemode_twoPlayer"
+        android:onClick="onClickGameMode" />
 </RelativeLayout>

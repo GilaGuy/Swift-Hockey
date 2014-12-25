@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     tools:context="filipgutica_melvinloho_alexdellow.airhockey.GameActivity">
 
-    <insertcreativecompanynamehere.swifthockey.HockeyArena
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/arena"/>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/hockeyArenaContainer"></FrameLayout>
 
     <TextView
         android:layout_width="wrap_content"

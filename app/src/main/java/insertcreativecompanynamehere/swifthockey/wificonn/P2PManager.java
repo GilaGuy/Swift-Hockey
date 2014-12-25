@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import insertcreativecompanynamehere.swifthockey.GameActivityMP;
+
 /**
  * Handles reading and writing of messages with socket buffers. Uses a Handler
  * to post messages to UI thread for UI updates.
@@ -35,7 +37,7 @@ public class P2PManager implements Runnable {
             oStream = socket.getOutputStream();
             byte[] buffer = new byte[1024];
             int bytes;
-            handler.obtainMessage(WiFiServiceDiscoveryActivity.MY_HANDLE, this).sendToTarget();
+            handler.obtainMessage(GameActivityMP.MY_HANDLE, this).sendToTarget();
 
             while (true) {
                 try {
@@ -47,7 +49,7 @@ public class P2PManager implements Runnable {
 
                     // Send the obtained bytes to the UI Activity
                     Log.d(TAG, "Rec:" + String.valueOf(buffer));
-                    handler.obtainMessage(WiFiServiceDiscoveryActivity.MESSAGE_READ,
+                    handler.obtainMessage(GameActivityMP.MESSAGE_READ,
                             bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

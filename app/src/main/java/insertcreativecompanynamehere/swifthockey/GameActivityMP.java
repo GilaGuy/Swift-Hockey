@@ -1,5 +1,5 @@
 
-package insertcreativecompanynamehere.swifthockey.wificonn;
+package insertcreativecompanynamehere.swifthockey;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -29,11 +29,15 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import insertcreativecompanynamehere.swifthockey.HockeyArenaP2P;
-import insertcreativecompanynamehere.swifthockey.HockeyArenaP2P.MessageTarget;
-import insertcreativecompanynamehere.swifthockey.R;
+import insertcreativecompanynamehere.swifthockey.HockeyArenaMP.MessageTarget;
+import insertcreativecompanynamehere.swifthockey.wificonn.ClientSocketHandler;
+import insertcreativecompanynamehere.swifthockey.wificonn.GroupOwnerSocketHandler;
+import insertcreativecompanynamehere.swifthockey.wificonn.P2PManager;
+import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectBroadcastReceiver;
+import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList;
 import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList.DeviceClickListener;
 import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList.WiFiDevicesAdapter;
+import insertcreativecompanynamehere.swifthockey.wificonn.WiFiP2pService;
 
 /**
  * The main activity for the sample. This activity registers a local service and
@@ -46,7 +50,7 @@ import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList
  * {@code WiFiChatFragment} is then added to the the main activity which manages
  * the interface and messaging needs for a chat session.
  */
-public class WiFiServiceDiscoveryActivity extends Activity implements
+public class GameActivityMP extends Activity implements
         DeviceClickListener, Handler.Callback, MessageTarget,
         ConnectionInfoListener {
 
@@ -61,13 +65,12 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
     public static final int MY_HANDLE = 0x400 + 2;
     private WifiP2pManager manager;
 
-    static final int SERVER_PORT = 4545;
+    public static final int SERVER_PORT = 4545;
 
     private final IntentFilter intentFilter = new IntentFilter();
     private Channel channel;
     private BroadcastReceiver receiver = null;
     private WifiP2pDnsSdServiceRequest serviceRequest;
-
 
     private Handler handler = new Handler(this);
 
@@ -77,12 +80,11 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
 
     public static boolean receiveLock = false;
 
-    private HockeyArenaP2P ha;
+    private HockeyArenaMP ha;
 
     public Handler getHandler() {
         return handler;
     }
-
 
     /** Called when the activity is first created. */
     @Override
@@ -349,8 +351,8 @@ public class WiFiServiceDiscoveryActivity extends Activity implements
         }
 
         //Start the hockey arena
-        ha = new HockeyArenaP2P(getApplicationContext());
-        this.setContentView(ha);
+        ha = new HockeyArenaMP(getApplicationContext());
+        setContentView(ha);
     }
 
     public void appendStatus(String status) {
