@@ -299,9 +299,6 @@ public class GameActivityMP extends GameActivitySP implements
                     ha.sendLock = false;
                     receiveLock = true;
                 }
-
-
-
                 break;
 
             case MY_HANDLE:
@@ -353,8 +350,9 @@ public class GameActivityMP extends GameActivitySP implements
 
         //Start the hockey arena
         setContentView(R.layout.activity_game);
+        ha = new HockeyArenaMP(getApplicationContext());
         FrameLayout hockeyArenaContainer = ((FrameLayout)findViewById(R.id.hockeyArenaContainer));
-        hockeyArenaContainer.addView(new HockeyArenaMP(getApplicationContext()));
+        hockeyArenaContainer.addView(ha);
     }
 
     public void appendStatus(String status) {

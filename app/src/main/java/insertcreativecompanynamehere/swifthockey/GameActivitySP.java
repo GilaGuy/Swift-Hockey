@@ -7,12 +7,11 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class GameActivitySP extends Activity {
-
+public class GameActivitySP extends Activity
+{
+    public static final String TYPE = "GameActivityType";
     public static final int TYPE_2P = 0;
     public static final int TYPE_AI = 1;
-
-    public static final String TYPE = "GameActivityType";
 
     public static TextView scoreTop, scoreBot;
 

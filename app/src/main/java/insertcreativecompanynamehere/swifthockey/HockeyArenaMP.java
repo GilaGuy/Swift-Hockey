@@ -198,8 +198,8 @@ public class HockeyArenaMP extends View
         mPaint.setColor(Color.BLACK);
         mPaint.setStrokeWidth(3f);
 
-//        GameActivity.scoreTop.setText(String.valueOf(goalCountTop));
- //       GameActivity.scoreBot.setText(String.valueOf(goalCountBot));
+        GameActivityMP.scoreTop.setText(String.valueOf(goalCountTop));
+        GameActivityMP.scoreBot.setText(String.valueOf(goalCountBot));
 
         canvas.drawBitmap(puckBall.getBitmap(), puckBall.x - puckWidth/2, puckBall.y - puckWidth/2, mPaint);
         canvas.drawBitmap(paddleBall.getBitmap(), paddleBall.x - paddleWidth / 2, paddleBall.y - paddleHeight / 2, mPaint);
