@@ -16,10 +16,10 @@
         android:id="@+id/scoreTopTxt"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold"
         android:textSize="@dimen/txt_size"
         android:rotation="180"
-        android:text="0" />
+        android:text="0"
+        android:fontFamily="sans-serif-medium" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,8 +28,8 @@
         android:id="@+id/scoreBotTxt"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold"
         android:textSize="@dimen/txt_size"
-        android:text="0" />
+        android:text="0"
+        android:fontFamily="sans-serif-medium" />
 
 </RelativeLayout>
