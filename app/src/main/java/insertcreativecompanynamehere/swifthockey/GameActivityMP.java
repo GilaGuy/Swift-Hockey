@@ -1,7 +1,6 @@
 
 package insertcreativecompanynamehere.swifthockey;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -55,12 +54,12 @@ public class GameActivityMP extends GameActivitySP implements
         DeviceClickListener, Handler.Callback, MessageTarget,
         ConnectionInfoListener {
 
-    public static final String TAG = "wifidirectdemo";
+    public static final String TAG = "wifidirect";
 
     // TXT RECORD properties
     public static final String TXTRECORD_PROP_AVAILABLE = "available";
-    public static final String SERVICE_INSTANCE = "_wifidemotest";
     public static final String SERVICE_REG_TYPE = "_presence._tcp";
+    public static String SERVICE_INSTANCE;
 
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
@@ -91,7 +90,10 @@ public class GameActivityMP extends GameActivitySP implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.frag_playersearch);
+
+        SERVICE_INSTANCE = getResources().getString(R.string.app_name);
+
         statusTxtView = (TextView) findViewById(R.id.status_text);
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -106,7 +108,6 @@ public class GameActivityMP extends GameActivitySP implements
         servicesList = new WiFiDirectServicesList();
         getFragmentManager().beginTransaction()
                 .add(R.id.container_root, servicesList, "services").commit();
-
     }
 
     @Override
