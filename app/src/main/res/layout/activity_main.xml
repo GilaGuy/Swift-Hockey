@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context=".MainActivity"
-    android:background="@color/color_bg"
+    android:background="@drawable/bg_radialgradient"
     android:padding="50dip">
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="42dip"
-        android:textColor="@color/txt_color_title"
+        android:textColor="@color/color_txt_title"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="normal|bold" />
 
@@ -36,7 +36,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textColor="@color/txt_color_btn"
+        android:textColor="@color/color_txt_btn"
         android:background="@drawable/chunkybutton"
         android:layout_marginTop="10dip"
         android:textStyle="bold"
@@ -53,7 +53,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="@color/txt_color_btn"
+        android:textColor="@color/color_txt_btn"
         android:background="@drawable/chunkybutton"
         android:layout_marginTop="10dip"
         android:textStyle="bold"
@@ -70,7 +70,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="@color/txt_color_btn"
+        android:textColor="@color/color_txt_btn"
         android:background="@drawable/chunkybutton"
         android:layout_marginTop="10dip"
         android:textStyle="bold"
