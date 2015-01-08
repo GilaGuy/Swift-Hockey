@@ -137,6 +137,26 @@ public class GameActivityMP extends GameActivitySP implements
         }
         super.onStop();
     }
+    @Override
+    public void onBackPressed() {
+        if (manager != null && channel != null) {
+
+            manager.removeGroup(channel, new ActionListener() {
+
+                @Override
+                public void onFailure(int reasonCode) {
+                    Log.d(TAG, "Back Pressed Disconnect failed. Reason :" + reasonCode);
+                }
+
+                @Override
+                public void onSuccess() {
+                }
+
+            });
+        }
+        super.onBackPressed();
+    }
+
 
     /**
      * Registers a local service and then initiates a service discovery

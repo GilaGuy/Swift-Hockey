@@ -81,4 +81,14 @@ public class P2PManager implements Runnable {
         }
     }
 
+    public void closeSocket()
+    {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
