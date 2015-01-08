@@ -53,6 +53,9 @@ public class P2PManager implements Runnable {
                             bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
+                    Log.d(TAG, "Closing Socket");
+                    socket.close();
+                    break;
                 }
             }
         }
@@ -62,6 +65,7 @@ public class P2PManager implements Runnable {
         }
         finally {
             try {
+                Log.d(TAG, "Closing Socket");
                 socket.close();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -36,6 +36,7 @@ public class ClientSocketHandler extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             try {
+                Log.d(TAG, "Closing Socket");
                 socket.close();
             } catch (IOException e1) {
                 e1.printStackTrace();

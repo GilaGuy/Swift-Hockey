@@ -54,6 +54,7 @@ public class GroupOwnerSocketHandler extends Thread {
             } catch (IOException e) {
                 try {
                     if (socket != null && !socket.isClosed()) {
+                        Log.d(TAG, "Closing Socket");
                         socket.close();
                     }
                 } catch (IOException ioe) {
