@@ -49,6 +49,7 @@ import insertcreativecompanynamehere.swifthockey.wificonn.WiFiP2pService;
  * the same service, the app opens up sockets to initiate a chat.
  * {@code WiFiChatFragment} is then added to the the main activity which manages
  * the interface and messaging needs for a chat session.
+ * big commit
  */
 public class GameActivityMP extends GameActivitySP implements
         DeviceClickListener, Handler.Callback, MessageTarget,
