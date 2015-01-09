@@ -123,6 +123,11 @@ public class GameActivityMP extends GameActivitySP implements
     @Override
     protected void onStop() {
         if (manager != null && channel != null) {
+
+            if (ha != null) {
+                ha.closeConnection();
+            }
+
             manager.removeGroup(channel, new ActionListener() {
 
                 @Override
@@ -132,15 +137,21 @@ public class GameActivityMP extends GameActivitySP implements
 
                 @Override
                 public void onSuccess() {
+
+                    Log.d(TAG, "Disconnect success");
                 }
 
             });
         }
         super.onStop();
     }
-    @Override
+  /*  @Override
     public void onBackPressed() {
         if (manager != null && channel != null) {
+
+            if (ha != null)
+                ha.closeConnection();
+
 
             manager.removeGroup(channel, new ActionListener() {
 
@@ -151,12 +162,13 @@ public class GameActivityMP extends GameActivitySP implements
 
                 @Override
                 public void onSuccess() {
+                    Log.d(TAG, "Disconnect success");
                 }
 
             });
         }
         super.onBackPressed();
-    }
+    }*/
 
 
     /**

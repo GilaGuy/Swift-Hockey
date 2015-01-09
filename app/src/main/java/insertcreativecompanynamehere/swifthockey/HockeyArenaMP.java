@@ -362,4 +362,9 @@ public class HockeyArenaMP extends View
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
+
+    public void closeConnection() {
+        if (p2PManager != null)
+            p2PManager.closeSocket();
+    }
 }
