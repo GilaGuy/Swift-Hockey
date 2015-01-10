@@ -64,6 +64,7 @@ public class GameActivityMP extends GameActivitySP implements
 
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
+    public static boolean connected = false;
     private WifiP2pManager manager;
 
     public static final int SERVER_PORT = 4545;
@@ -126,6 +127,7 @@ public class GameActivityMP extends GameActivitySP implements
 
             if (ha != null) {
                 ha.closeConnection();
+                connected = false;
             }
 
             manager.removeGroup(channel, new ActionListener() {
@@ -370,6 +372,7 @@ public class GameActivityMP extends GameActivitySP implements
             try {
                 handler = new GroupOwnerSocketHandler(this.getHandler());
                 handler.start();
+                connected = true;
             } catch (IOException e) {
                 Log.d(TAG, "Failed to create a server thread - " + e.getMessage());
                 return;
