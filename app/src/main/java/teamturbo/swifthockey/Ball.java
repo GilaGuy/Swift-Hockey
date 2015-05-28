@@ -1,4 +1,4 @@
-package insertcreativecompanynamehere.swifthockey;
+package teamturbo.swifthockey;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by Filip on 2014-09-16.
  * Based on code from...
- *  Modified by Melvin and Filip
+ * Modified by Melvin and Filip
  */
 public class Ball {
 
@@ -31,8 +31,7 @@ public class Ball {
     Bitmap curBall;
     type bType;
 
-    public Ball( Bitmap img, float xPos, float yPos, int rad, type t)
-    {
+    public Ball(Bitmap img, float xPos, float yPos, int rad, type t) {
         speed_x = 0;
         speed_y = 0;
         x = xPos;

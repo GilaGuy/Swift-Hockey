@@ -1,5 +1,4 @@
-
-package insertcreativecompanynamehere.swifthockey.wificonn;
+package teamturbo.swifthockey.wificonn;
 
 import android.os.Handler;
 import android.util.Log;
