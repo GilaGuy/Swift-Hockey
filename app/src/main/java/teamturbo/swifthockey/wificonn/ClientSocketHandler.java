@@ -1,5 +1,4 @@
-
-package insertcreativecompanynamehere.swifthockey.wificonn;
+package teamturbo.swifthockey.wificonn;
 
 import android.os.Handler;
 import android.util.Log;
@@ -9,7 +8,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import insertcreativecompanynamehere.swifthockey.GameActivityMP;
+import teamturbo.swifthockey.GameActivityMP;
 
 public class ClientSocketHandler extends Thread {
 

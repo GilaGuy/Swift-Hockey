@@ -1,5 +1,4 @@
-
-package insertcreativecompanynamehere.swifthockey.wificonn;
+package teamturbo.swifthockey.wificonn;
 
 import android.os.Handler;
 import android.util.Log;
@@ -9,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import insertcreativecompanynamehere.swifthockey.GameActivityMP;
+import teamturbo.swifthockey.GameActivityMP;
 
 /**
  * Handles reading and writing of messages with socket buffers. Uses a Handler
@@ -51,17 +50,14 @@ public class P2PManager implements Runnable {
                     Log.d(TAG, "Rec:" + String.valueOf(buffer));
                     handler.obtainMessage(GameActivityMP.MESSAGE_READ,
                             bytes, -1, buffer).sendToTarget();
-                } catch (IOException e ) {
+                } catch (IOException e) {
                     Log.e(TAG, "disconnected p2p Manager");
                     break;
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 Log.d(TAG, "Closing Socket p2p manager");
                 socket.close();
@@ -79,8 +75,7 @@ public class P2PManager implements Runnable {
         }
     }
 
-    public void closeSocket()
-    {
+    public void closeSocket() {
         try {
             socket.close();
         } catch (IOException e) {

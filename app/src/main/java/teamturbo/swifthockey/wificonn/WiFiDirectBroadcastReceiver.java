@@ -1,5 +1,4 @@
-
-package insertcreativecompanynamehere.swifthockey.wificonn;
+package teamturbo.swifthockey.wificonn;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project
@@ -28,7 +27,7 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.util.Log;
 
-import insertcreativecompanynamehere.swifthockey.GameActivityMP;
+import teamturbo.swifthockey.GameActivityMP;
 
 /**
  * A BroadcastReceiver that notifies of important wifi p2p events.
@@ -40,12 +39,12 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private Activity activity;
 
     /**
-     * @param manager WifiP2pManager system service
-     * @param channel Wifi p2p channel
+     * @param manager  WifiP2pManager system service
+     * @param channel  Wifi p2p channel
      * @param activity activity associated with the receiver
      */
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
-            Activity activity) {
+                                       Activity activity) {
         super();
         this.manager = manager;
         this.channel = channel;

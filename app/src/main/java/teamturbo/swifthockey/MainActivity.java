@@ -1,4 +1,4 @@
-package insertcreativecompanynamehere.swifthockey;
+package teamturbo.swifthockey;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import insertcreativecompanynamehere.swifthockey.R;
 
 public class MainActivity extends Activity {
     private MediaPlayer mp = null;
@@ -22,8 +24,7 @@ public class MainActivity extends Activity {
     public void onClickGameMode(View v) {
         Intent intent;
 
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.btn_gamemode_twoPlayer:
                 intent = new Intent(this, GameActivitySP.class);
                 intent.putExtra(GameActivitySP.TYPE, GameActivitySP.TYPE_2P);
@@ -92,13 +93,13 @@ public class MainActivity extends Activity {
     }
 
     public void pauseMusic() {
-        if(mp != null && mp.isPlaying()) {
+        if (mp != null && mp.isPlaying()) {
             mp.pause();
         }
     }
 
     public void stopMusic() {
-        if(mp != null && mp.isPlaying()) {
+        if (mp != null && mp.isPlaying()) {
             mp.stop();
             mp.release();
             mp = null;

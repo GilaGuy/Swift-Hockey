@@ -1,5 +1,4 @@
-
-package insertcreativecompanynamehere.swifthockey.wificonn;
+package teamturbo.swifthockey.wificonn;
 
 import android.app.ListFragment;
 import android.content.Context;
@@ -31,7 +30,7 @@ public class WiFiDirectServicesList extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.devices_list, container, false);
     }
 
@@ -57,7 +56,7 @@ public class WiFiDirectServicesList extends ListFragment {
         private List<WiFiP2pService> items;
 
         public WiFiDevicesAdapter(Context context, int resource,
-                int textViewResourceId, List<WiFiP2pService> items) {
+                                  int textViewResourceId, List<WiFiP2pService> items) {
             super(context, resource, textViewResourceId, items);
             this.items = items;
         }

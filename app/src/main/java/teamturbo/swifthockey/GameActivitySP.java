@@ -1,4 +1,4 @@
-package insertcreativecompanynamehere.swifthockey;
+package teamturbo.swifthockey;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,8 +7,9 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class GameActivitySP extends Activity
-{
+import insertcreativecompanynamehere.swifthockey.R;
+
+public class GameActivitySP extends Activity {
     public static final String TYPE = "GameActivityType";
     public static final int TYPE_2P = 0;
     public static final int TYPE_AI = 1;
@@ -24,9 +25,8 @@ public class GameActivitySP extends Activity
         scoreTop = (TextView) findViewById(R.id.scoreTopTxt);
         scoreBot = (TextView) findViewById(R.id.scoreBotTxt);
 
-        FrameLayout hockeyArenaContainer = ((FrameLayout)findViewById(R.id.hockeyArenaContainer));
-        switch (getIntent().getIntExtra(GameActivitySP.TYPE, 0))
-        {
+        FrameLayout hockeyArenaContainer = ((FrameLayout) findViewById(R.id.hockeyArenaContainer));
+        switch (getIntent().getIntExtra(GameActivitySP.TYPE, 0)) {
             case TYPE_2P:
                 hockeyArenaContainer.addView(new HockeyArenaSP2P(getApplicationContext()));
                 break;

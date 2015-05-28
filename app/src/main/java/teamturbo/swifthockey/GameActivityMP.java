@@ -1,9 +1,7 @@
-
-package insertcreativecompanynamehere.swifthockey;
+package teamturbo.swifthockey;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -29,15 +27,13 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import insertcreativecompanynamehere.swifthockey.HockeyArenaMP.MessageTarget;
-import insertcreativecompanynamehere.swifthockey.wificonn.ClientSocketHandler;
-import insertcreativecompanynamehere.swifthockey.wificonn.GroupOwnerSocketHandler;
-import insertcreativecompanynamehere.swifthockey.wificonn.P2PManager;
-import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectBroadcastReceiver;
-import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList;
-import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList.DeviceClickListener;
-import insertcreativecompanynamehere.swifthockey.wificonn.WiFiDirectServicesList.WiFiDevicesAdapter;
-import insertcreativecompanynamehere.swifthockey.wificonn.WiFiP2pService;
+import insertcreativecompanynamehere.swifthockey.R;
+import teamturbo.swifthockey.wificonn.ClientSocketHandler;
+import teamturbo.swifthockey.wificonn.GroupOwnerSocketHandler;
+import teamturbo.swifthockey.wificonn.P2PManager;
+import teamturbo.swifthockey.wificonn.WiFiDirectBroadcastReceiver;
+import teamturbo.swifthockey.wificonn.WiFiDirectServicesList;
+import teamturbo.swifthockey.wificonn.WiFiP2pService;
 
 /**
  * The main activity for the sample. This activity registers a local service and
@@ -52,7 +48,7 @@ import insertcreativecompanynamehere.swifthockey.wificonn.WiFiP2pService;
  * big commit
  */
 public class GameActivityMP extends GameActivitySP implements
-        DeviceClickListener, Handler.Callback, MessageTarget,
+        WiFiDirectServicesList.DeviceClickListener, Handler.Callback, HockeyArenaMP.MessageTarget,
         ConnectionInfoListener {
 
     public static final String TAG = "wifidirect";
@@ -88,7 +84,9 @@ public class GameActivityMP extends GameActivitySP implements
         return handler;
     }
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +101,7 @@ public class GameActivityMP extends GameActivitySP implements
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-        manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        manager = (WifiP2pManager) getSystemService(WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
         startRegistrationAndDiscovery();
 
@@ -211,7 +209,7 @@ public class GameActivityMP extends GameActivitySP implements
 
                     @Override
                     public void onDnsSdServiceAvailable(String instanceName,
-                            String registrationType, WifiP2pDevice srcDevice) {
+                                                        String registrationType, WifiP2pDevice srcDevice) {
 
                         // A service has been discovered. Is this our app?
 
@@ -222,7 +220,7 @@ public class GameActivityMP extends GameActivitySP implements
                             WiFiDirectServicesList fragment = (WiFiDirectServicesList) getFragmentManager()
                                     .findFragmentByTag("services");
                             if (fragment != null) {
-                                WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) fragment
+                                WiFiDirectServicesList.WiFiDevicesAdapter adapter = ((WiFiDirectServicesList.WiFiDevicesAdapter) fragment
                                         .getListAdapter());
                                 WiFiP2pService service = new WiFiP2pService();
                                 service.device = srcDevice;
@@ -247,7 +245,7 @@ public class GameActivityMP extends GameActivitySP implements
                     public void onDnsSdTxtRecordAvailable(String fullDomainName,
                                                           Map<String, String> record,
                                                           WifiP2pDevice device) {
-                        Log.d(TAG,device.deviceName + " is " + record.get(TXTRECORD_PROP_AVAILABLE));
+                        Log.d(TAG, device.deviceName + " is " + record.get(TXTRECORD_PROP_AVAILABLE));
                     }
                 });
 
@@ -326,12 +324,11 @@ public class GameActivityMP extends GameActivitySP implements
                 float xSpeed = byteBuffer.getFloat();
                 float ySpeed = byteBuffer.getFloat();
 
-                if (!receiveLock)
-                {
+                if (!receiveLock) {
                     xSpeed *= -1;
                     ySpeed *= -1;
-                 
-                    ha.updatePuckPosition(xPos ,xSpeed, ySpeed);
+
+                    ha.updatePuckPosition(xPos, xSpeed, ySpeed);
                     ha.sendLock = false;
                     receiveLock = true;
                 }
@@ -388,7 +385,7 @@ public class GameActivityMP extends GameActivitySP implements
         //Start the hockey arena
         setContentView(R.layout.activity_game);
         ha = new HockeyArenaMP(getApplicationContext());
-        FrameLayout hockeyArenaContainer = ((FrameLayout)findViewById(R.id.hockeyArenaContainer));
+        FrameLayout hockeyArenaContainer = ((FrameLayout) findViewById(R.id.hockeyArenaContainer));
         hockeyArenaContainer.addView(ha);
     }
 

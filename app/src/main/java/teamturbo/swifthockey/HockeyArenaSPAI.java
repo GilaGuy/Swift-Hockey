@@ -1,4 +1,4 @@
-package insertcreativecompanynamehere.swifthockey;
+package teamturbo.swifthockey;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,31 +8,27 @@ import android.view.VelocityTracker;
 /**
  * Created by Filip on 2014-09-15.
  */
-public class HockeyArenaSPAI extends HockeyArenaSP2P
-{
+public class HockeyArenaSPAI extends HockeyArenaSP2P {
     public HockeyArenaSPAI(Context context) {
         super(context);
         commonConstructor();
     }
+
     public HockeyArenaSPAI(Context context, AttributeSet attrs) {
         super(context, attrs);
         commonConstructor();
     }
-    
+
     private void commonConstructor() {
         GameActivitySP.scoreTop.setRotation(0);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent m)
-    {
-        switch (m.getActionMasked())
-        {
+    public boolean onTouchEvent(MotionEvent m) {
+        switch (m.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                for (int i = 0; i < m.getPointerCount(); ++i)
-                {
-                    if (m.getY(i) > screenHeight/2)
-                    {
+                for (int i = 0; i < m.getPointerCount(); ++i) {
+                    if (m.getY(i) > screenHeight / 2) {
                         paddleBall.x = m.getX(i);
                         paddleBall.y = m.getY(i);
                         paddleBall.speed_x = 0;
@@ -53,10 +49,8 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                for (int i = 0; i < m.getPointerCount(); ++i)
-                {
-                    if (m.getY(i) > screenHeight/2 + paddleHeight/2)
-                    {
+                for (int i = 0; i < m.getPointerCount(); ++i) {
+                    if (m.getY(i) > screenHeight / 2 + paddleHeight / 2) {
                         paddleBall.x = m.getX(i);
                         paddleBall.y = m.getY(i);
                         //Add movement to tracker
@@ -79,8 +73,7 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
         return true;
     }
 
-    protected void loop()
-    {
+    protected void loop() {
         AiControl(paddleBall2);
 
         for (Ball b : Ball.balls) b.update();
@@ -94,12 +87,12 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
             detectWallCollisions(puckBall);
         }
 
-        if (paddleBall.y < screenHeight/2 + paddleHeight/2) {
+        if (paddleBall.y < screenHeight / 2 + paddleHeight / 2) {
             paddleBall.y = screenHeight / 2 + paddleHeight / 2;
             paddleBall.speed_y = Math.abs(paddleBall.speed_y);
         }
 
-        if (paddleBall2.y > screenHeight/2 - paddleHeight/2) {
+        if (paddleBall2.y > screenHeight / 2 - paddleHeight / 2) {
             paddleBall2.y = screenHeight / 2 - paddleHeight / 2;
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
@@ -107,17 +100,16 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
         if (goalCountBot >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
             handler.postDelayed(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     for (Ball b : Ball.balls) clearVelocity(b);
 
-                    puckBall.x = screenWidth/2;
-                    puckBall.y = screenHeight/2;
+                    puckBall.x = screenWidth / 2;
+                    puckBall.y = screenHeight / 2;
 
-                    paddleBall2.x = screenWidth/2;
-                    paddleBall2.y = screenHeight * 1/3;
-                    paddleBall.x = screenWidth/2;
-                    paddleBall.y =  screenHeight * 2/3;
+                    paddleBall2.x = screenWidth / 2;
+                    paddleBall2.y = screenHeight * 1 / 3;
+                    paddleBall.x = screenWidth / 2;
+                    paddleBall.y = screenHeight * 2 / 3;
 
                     goalCountBot = 0;
                     goalCountTop = 0;
@@ -126,16 +118,14 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
         }
     }
 
-    protected void AiControl(Ball controlledBall)
-    {
-        if (!scored && puckBall.y < screenHeight/2 )
-        {
+    protected void AiControl(Ball controlledBall) {
+        if (!scored && puckBall.y < screenHeight / 2) {
             // controlledBall.x = puckBall.x; // impossible mode
 
             if (getDistanceX(controlledBall, puckBall) > 0 + paddleHeight / 2) {
-                controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / AI_DIFFICULTY ;
+                controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / AI_DIFFICULTY;
             } else if (getDistanceX(controlledBall, puckBall) < 0 - paddleHeight / 2) {
-                controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / AI_DIFFICULTY ;
+                controlledBall.speed_x = getDistanceX(puckBall, controlledBall) / AI_DIFFICULTY;
             }
 
             if (controlledBall.speed_x > Ball.MAX_SPEED.x)
@@ -144,9 +134,9 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
                 controlledBall.speed_x = -Ball.MAX_SPEED.x;
 
             if (getDistanceY(controlledBall, puckBall) > 0 + paddleHeight / 2) {
-                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / AI_DIFFICULTY ;
+                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / AI_DIFFICULTY;
             } else if (getDistanceY(controlledBall, puckBall) < 0 - paddleHeight / 2) {
-                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / AI_DIFFICULTY ;
+                controlledBall.speed_y = getDistanceY(puckBall, controlledBall) / AI_DIFFICULTY;
             }
 
             if (controlledBall.speed_y > Ball.MAX_SPEED.y)
@@ -161,21 +151,19 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P
                 controlledBall.speed_y *= 1.03;
             }
 
-            if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
+            if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3 / 4)
                     && Math.abs(getDistanceY(puckBall, controlledBall)) < controlledBall.ballRadius * 2)
                 controlledBall.y *= Ball.FRICTION_FACTOR;
 
             controlledBall.detectCollisions();
-        }
-        else
-        {
+        } else {
             if (controlledBall.y > controlledBall.ballRadius)
                 controlledBall.y *= Ball.FRICTION_FACTOR;
 
-            if (controlledBall.x > screenWidth/2 + controlledBall.ballRadius) {
+            if (controlledBall.x > screenWidth / 2 + controlledBall.ballRadius) {
                 controlledBall.speed_x += -Ball.FRICTION_FACTOR;
-            } else if (controlledBall.x < screenWidth/2 - controlledBall.ballRadius) {
-                controlledBall.speed_x +=  Ball.FRICTION_FACTOR;
+            } else if (controlledBall.x < screenWidth / 2 - controlledBall.ballRadius) {
+                controlledBall.speed_x += Ball.FRICTION_FACTOR;
             }
         }
     }
