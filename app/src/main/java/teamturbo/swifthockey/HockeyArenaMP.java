@@ -18,7 +18,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.nio.ByteBuffer;
+import java.io.IOException;
 
 import teamturbo.swifthockey.wificonn.P2PManager;
 
@@ -274,13 +274,16 @@ public class HockeyArenaMP extends View {
                 SFXManager.sfx_bounce(b);
             } else if (b.getType() == Ball.type.puck) {
                 if (!sendLock) {
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(12);
-                    Log.d("SENT XPOS", "" + puckBall.x);
-                    byteBuffer.putFloat(puckBall.x / screenWidth);
-                    byteBuffer.putFloat(puckBall.speed_x);
-                    byteBuffer.putFloat(puckBall.speed_y);
+
+                    P2PMessage p2PMessage = new P2PMessage(P2PMessage.Type.PuckInfo, puckBall.x / screenWidth, puckBall.speed_x, puckBall.speed_y);
+
                     if (p2PManager != null) {
-                        p2PManager.write(byteBuffer.array());
+                        try {
+                            p2PManager.write(Serializer.serialize(p2PMessage));
+                            Log.d("Sending P2P_MESSAGE", "" + p2PMessage.toString());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         GameActivityMP.receiveLock = false;
                     }
                     sendLock = true;
