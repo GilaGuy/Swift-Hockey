@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import teamturbo.swifthockey.GameActivityMP;
+import teamturbo.swifthockey.P2PMessage;
+import teamturbo.swifthockey.Serializer;
 
 /**
  * Handles reading and writing of messages with socket buffers. Uses a Handler
@@ -18,15 +20,14 @@ public class P2PManager implements Runnable {
 
     private Socket socket = null;
     private Handler handler;
+    private InputStream iStream;
+    private OutputStream oStream;
+    private static final String TAG = "P2PHandler";
 
     public P2PManager(Socket socket, Handler handler) {
         this.socket = socket;
         this.handler = handler;
     }
-
-    private InputStream iStream;
-    private OutputStream oStream;
-    private static final String TAG = "P2PHandler";
 
     @Override
     public void run() {
@@ -43,19 +44,23 @@ public class P2PManager implements Runnable {
                     // Read from the InputStream
                     bytes = iStream.read(buffer);
                     if (bytes == -1) {
+                        socket.close();
                         break;
                     }
 
+                    P2PMessage message = (P2PMessage) Serializer.deserialize(buffer);
+
                     // Send the obtained bytes to the UI Activity
                     Log.d(TAG, "Rec:" + String.valueOf(buffer));
-                    handler.obtainMessage(GameActivityMP.MESSAGE_READ,
-                            bytes, -1, buffer).sendToTarget();
+                    handler.obtainMessage(GameActivityMP.MESSAGE_READ, message).sendToTarget();
                 } catch (IOException e) {
+                    e.printStackTrace();
                     Log.e(TAG, "disconnected p2p Manager");
                     break;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+
             e.printStackTrace();
         } finally {
             try {

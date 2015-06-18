@@ -23,7 +23,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -316,13 +315,31 @@ public class GameActivityMP extends GameActivitySP implements
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MESSAGE_READ:
-                byte[] readBuf = (byte[]) msg.obj;
+                P2PMessage p2p_message = (P2PMessage) msg.obj;
+                handleP2PMessage(p2p_message);
+                break;
 
-                ByteBuffer byteBuffer = ByteBuffer.wrap(readBuf);
-                float xPos = byteBuffer.getFloat();
+            case MY_HANDLE:
+                Object obj = msg.obj;
+                ha.setP2PManager((P2PManager) obj);
 
-                float xSpeed = byteBuffer.getFloat();
-                float ySpeed = byteBuffer.getFloat();
+        }
+        return true;
+    }
+
+    public void handleP2PMessage(P2PMessage msg)
+    {
+        switch(msg.getTYPE())
+        {
+            case Disconnect:
+                //Kill the multiplayer connection
+                onStop();
+                break;
+            case PuckInfo:
+
+                float xPos = msg.getxPos();
+                float xSpeed = msg.getxVelocity();
+                float ySpeed = msg.getyVelocity();
 
                 if (!receiveLock) {
                     xSpeed *= -1;
@@ -333,13 +350,7 @@ public class GameActivityMP extends GameActivitySP implements
                     receiveLock = true;
                 }
                 break;
-
-            case MY_HANDLE:
-                Object obj = msg.obj;
-                ha.setP2PManager((P2PManager) obj);
-
         }
-        return true;
     }
 
     @Override
