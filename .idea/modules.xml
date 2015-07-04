@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Swift_Hockey.iml" filepath="$PROJECT_DIR$/Swift_Hockey.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Swift-Hockey.iml" filepath="$PROJECT_DIR$/Swift-Hockey.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

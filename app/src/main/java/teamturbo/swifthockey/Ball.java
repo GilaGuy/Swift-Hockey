@@ -4,43 +4,52 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
- * Created by Filip on 2014-09-16.
- * Based on code from...
- * Modified by Melvin and Filip
+ * Created by Melvin and Filip
  */
 public class Ball {
 
     public static float FRICTION_FACTOR = .98f;
 
     public static Point MAX_SPEED = new Point(50, 50);
+    public static float MAX_ROTATION_SPEED = 1;
+    public static float EPSILON = 0.1f;
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
-
 
     enum type {
         puck, paddle
     }
 
-    float x;
-    float y;
-    float speed_x;
-    float speed_y;
+    enum rotation {
+        NONE, CW, CCW
+    }
+
+    public float x;
+    public float y;
+    public float speed_x;
+    public float speed_y;
+    public float angle;
+    public boolean angleInitialized;
+    public rotation rotationDirection;
     public float ballRadius;
-    Bitmap curBall;
-    type bType;
+    private Bitmap BallBitmap;
+    private type bType;
 
     public Ball(Bitmap img, float xPos, float yPos, int rad, type t) {
         speed_x = 0;
         speed_y = 0;
         x = xPos;
         y = yPos;
+        angle = 0;
+        angleInitialized = false;
+        rotationDirection = rotation.NONE;
         ballRadius = rad;
-        curBall = img;
+        BallBitmap = img;
         balls.add(this);
         bType = t;
-
     }
 
     public type getType() {
@@ -48,8 +57,7 @@ public class Ball {
     }
 
     public Bitmap getBitmap() {
-
-        return curBall;
+        return BallBitmap;
     }
 
     public void update() {
@@ -101,7 +109,5 @@ public class Ball {
         firstBall.y = firstBall.y + newVelY1;
         secondBall.x = secondBall.x + newVelX2;
         secondBall.y = secondBall.y + newVelY2;
-
-
     }
 }
