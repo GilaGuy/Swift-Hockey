@@ -20,11 +20,10 @@ import android.view.WindowManager;
 import static insertcreativecompanynamehere.swifthockey.R.drawable;
 
 /**
- * Created by Filip on 2014-09-15.
+ * Created by Melvin and Filip
  */
 public class HockeyArenaSP2P extends View {
     protected static int SCORE_TO_WIN = 5;
-    protected static int AI_DIFFICULTY = 1;       // the lower, the more difficult
     protected static long TIME_OUT = 4000;
 
     protected Paint mPaint;                       // Paint to draw set color etc...
@@ -393,14 +392,4 @@ public class HockeyArenaSP2P extends View {
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
     }
-
-    protected float getDistanceX(Ball b1, Ball b2) {
-        return b1.x - b2.x;
-    }
-
-    protected float getDistanceY(Ball b1, Ball b2) {
-        return b1.y - b2.y;
-    }
-
-
 }

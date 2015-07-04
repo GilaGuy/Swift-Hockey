@@ -29,7 +29,6 @@ import static insertcreativecompanynamehere.swifthockey.R.drawable;
  */
 public class HockeyArenaMP extends View {
     protected static int SCORE_TO_WIN = 5;
-    protected static int AI_DIFFICULTY = 1;       // the lower, the more difficult
     protected static long TIME_OUT = 4000;
 
     protected Paint mPaint;                       // Paint to draw set color etc...
