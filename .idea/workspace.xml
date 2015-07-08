@@ -21,14 +21,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96845b9b-0268-4484-ab49-f5c11016bc58" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/Ball.java" afterPath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/Ball.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaMP.java" afterPath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaMP.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaSP2P.java" afterPath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaSP2P.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaSPAI.java" afterPath="$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaSPAI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="96845b9b-0268-4484-ab49-f5c11016bc58" name="Default" comment="" />
     <ignored path="Swift-Hockey.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -71,8 +64,8 @@
       <file leaf-file-name="HockeyArenaSPAI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaSPAI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.95671">
-              <caret line="176" column="17" selection-start-line="176" selection-start-column="17" selection-end-line="176" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.521645">
+              <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
               <folding>
                 <element signature="e#645#646#0" expanded="true" />
                 <element signature="e#699#700#0" expanded="true" />
@@ -2108,8 +2101,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/teamturbo/swifthockey/HockeyArenaSPAI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.95671">
-          <caret line="176" column="17" selection-start-line="176" selection-start-column="17" selection-end-line="176" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.521645">
+          <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
           <folding>
             <element signature="e#645#646#0" expanded="true" />
             <element signature="e#699#700#0" expanded="true" />
