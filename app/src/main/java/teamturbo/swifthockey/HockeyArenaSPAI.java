@@ -12,7 +12,7 @@ import java.lang.Math;
  * Created by Melvin and Filip
  */
 public class HockeyArenaSPAI extends HockeyArenaSP2P {
-    public static float AI_DIFFICULTY = 0.01f; // 0 - 1
+    public static float AI_DIFFICULTY = 0.1f; // 0 - 1
 
     public HockeyArenaSPAI(Context context) {
         super(context);
@@ -93,12 +93,13 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
             paddleBall.y = screenHeight / 2 + paddleHeight / 2;
             paddleBall.speed_y = Math.abs(paddleBall.speed_y);
         }
+        /*
         if (paddleBall2.y > screenHeight / 2 - paddleHeight / 2) {
             paddleBall2.y = screenHeight / 2 - paddleHeight / 2;
             paddleBall2.speed_y = -Math.abs(paddleBall2.speed_y);
         }
-
-        if (goalCountBot >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
+*/
+        if (goalCountBottom >= SCORE_TO_WIN || goalCountTop >= SCORE_TO_WIN) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -112,7 +113,7 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
                     paddleBall.x = screenWidth / 2;
                     paddleBall.y = screenHeight * 2 / 3;
 
-                    goalCountBot = 0;
+                    goalCountBottom = 0;
                     goalCountTop = 0;
                 }
             }, TIME_OUT);
@@ -130,21 +131,17 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
             if
                     (
                     controlledBall.y < puckBall.y
-                            && Math.abs(xDistance) < puckBall.radius
+                            && Math.abs(xDistance) < puckBall.radius + controlledBall.radius
                     ) // move towards the ball
             {
-                float xuVel = xDistance / magDistance;
-                float xyVel = yDistance / magDistance;
-
                 controlledBall.speed_x = xDistance * AI_DIFFICULTY;
                 controlledBall.speed_y = yDistance * AI_DIFFICULTY;
 
-                if (magDistance <= controlledBall.radius + puckBall.radius) {
-                    controlledBall.speed_y *= 1 + Ball.FRICTION_FACTOR;
+                if (magDistance <= controlledBall.radius + puckBall.radius * 2) {
+                    Log.d(">>>AI", "GO!!");
 
-                    if ((controlledBall.x <= screenWidth / 4 || controlledBall.x >= screenWidth * 3/4)) {
-                        controlledBall.speed_y *= Ball.FRICTION_FACTOR;
-                    }
+                    controlledBall.speed_x *= 1 + Ball.FRICTION_FACTOR;
+                    controlledBall.speed_y *= 1 + Ball.FRICTION_FACTOR;
                 }
 
                 controlledBall.angleInitialized = false;
@@ -158,10 +155,8 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
                         case NONE:
                             if (puckBall.x > screenWidth * 0.5) {
                                 controlledBall.rotationDirection = Ball.rotation.CW;
-                                Log.d(">>>AI", "rot dir: CW");
                             } else {
                                 controlledBall.rotationDirection = Ball.rotation.CCW;
-                                Log.d(">>>AI", "rot dir: CCW");
                             }
 
                         case CW:
@@ -192,13 +187,11 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
 
                 //Log.d(">>>AI", "angle: " + controlledBall.angle);
             }
-
-            controlledBall.detectCollisions();
         }
         else // move back to your goal
         {
             if (controlledBall.y > controlledBall.radius) {
-                controlledBall.y *= 1 - AI_DIFFICULTY;
+                controlledBall.y *= Ball.FRICTION_FACTOR;
             }
 
             if (controlledBall.x > screenWidth / 2 + controlledBall.radius) {
