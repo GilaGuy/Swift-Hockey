@@ -12,7 +12,7 @@ import java.lang.Math;
  * Created by Melvin and Filip
  */
 public class HockeyArenaSPAI extends HockeyArenaSP2P {
-    public static float AI_DIFFICULTY = 0.3f; // 0 - 1
+    public static float AI_DIFFICULTY = 0.01f; // 0 - 1
 
     public HockeyArenaSPAI(Context context) {
         super(context);
@@ -79,9 +79,7 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
     }
 
     protected void loop() {
-        if (!scored) {
-            AiControl(paddleBall2);
-        }
+        AiControl(paddleBall2);
         for (Ball b : Ball.balls) b.update();
         for (Ball b : Ball.balls) b.detectCollisions();
 
@@ -123,55 +121,47 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
 
     protected void AiControl(Ball controlledBall)
     {
-        if (puckBall.y < screenHeight * 0.5)
+        if (puckBall.y < screenHeight * 0.5 && !scored)
         {
             float xDistance = puckBall.x - controlledBall.x;
             float yDistance = puckBall.y - controlledBall.y;
+            float magDistance = (float)Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 
             if
                     (
                     controlledBall.y < puckBall.y
-                    &&
-                    (controlledBall.angle > Math.PI * 0.75 || controlledBall.angle < Math.PI * 0.25)
+                            && Math.abs(xDistance) < puckBall.radius
                     ) // move towards the ball
             {
+                float xuVel = xDistance / magDistance;
+                float xyVel = yDistance / magDistance;
+
                 controlledBall.speed_x = xDistance * AI_DIFFICULTY;
                 controlledBall.speed_y = yDistance * AI_DIFFICULTY;
 
-                if (controlledBall.speed_x > Ball.MAX_SPEED.x)
-                    controlledBall.speed_x = Ball.MAX_SPEED.x;
-                else if (controlledBall.speed_x < -Ball.MAX_SPEED.x)
-                    controlledBall.speed_x = -Ball.MAX_SPEED.x;
+                if (magDistance <= controlledBall.radius + puckBall.radius) {
+                    controlledBall.speed_y *= 1 + Ball.FRICTION_FACTOR;
 
-                if (controlledBall.speed_y > Ball.MAX_SPEED.y)
-                    controlledBall.speed_y = Ball.MAX_SPEED.y;
-                else if (controlledBall.speed_y < -Ball.MAX_SPEED.y)
-                    controlledBall.speed_y = -Ball.MAX_SPEED.y;
-
-                if (Math.abs(xDistance) < controlledBall.ballRadius * 2
-                        && Math.abs(yDistance) < controlledBall.ballRadius * 2) {
-                    controlledBall.speed_y *= 1 + 1 - Ball.FRICTION_FACTOR;
+                    if ((controlledBall.x <= screenWidth / 4 || controlledBall.x >= screenWidth * 3/4)) {
+                        controlledBall.speed_y *= Ball.FRICTION_FACTOR;
+                    }
                 }
-
-                if ((puckBall.x <= screenWidth / 4 || puckBall.x >= screenWidth * 3/4)
-                        && Math.abs(yDistance) < controlledBall.ballRadius * 2)
-                    controlledBall.y *= Ball.FRICTION_FACTOR;
 
                 controlledBall.angleInitialized = false;
             }
             else // get around the ball
             {
-                float magnitude = (float)Math.sqrt(Math.pow(yDistance, 2) + Math.pow(xDistance, 2));
-
                 if (controlledBall.angleInitialized)
                 {
                     switch (controlledBall.rotationDirection)
                     {
                         case NONE:
-                            if (controlledBall.x > screenWidth * 0.5) {
+                            if (puckBall.x > screenWidth * 0.5) {
                                 controlledBall.rotationDirection = Ball.rotation.CW;
+                                Log.d(">>>AI", "rot dir: CW");
                             } else {
                                 controlledBall.rotationDirection = Ball.rotation.CCW;
+                                Log.d(">>>AI", "rot dir: CCW");
                             }
 
                         case CW:
@@ -186,42 +176,34 @@ public class HockeyArenaSPAI extends HockeyArenaSP2P {
                 else
                 {
                     double angleRad = 0.5*Math.PI - ( Math.atan2( yDistance, xDistance ) );
-
-                    if( angleRad < 0 )
-                    {
-                        angleRad += 2*Math.PI;
-                    }
+                    angleRad = (angleRad + 2*Math.PI) % 2*Math.PI;
 
                     controlledBall.angle = (float)angleRad;
                     controlledBall.angleInitialized = true;
                     controlledBall.rotationDirection = Ball.rotation.NONE;
-                    Log.d(">>>AI", "Angle init to: " + controlledBall.angle);
+                    Log.d(">>>AI", "angle init to: " + controlledBall.angle);
                 }
 
-                Log.d(">>>AI", "angle: " + controlledBall.angle * 180 / Math.PI);
+                float newX = puckBall.x + magDistance * (float)Math.cos(controlledBall.angle);
+                float newY = puckBall.y + magDistance * (float)Math.sin(controlledBall.angle);
 
-                float newX = puckBall.x + magnitude * (float)Math.cos(controlledBall.angle);
-                float newY = puckBall.y + magnitude * (float)Math.sin(controlledBall.angle);
+                controlledBall.speed_x = newX - controlledBall.x;
+                controlledBall.speed_y = newY - controlledBall.y;
 
-                controlledBall.x = newX;
-                controlledBall.y = newY;
+                //Log.d(">>>AI", "angle: " + controlledBall.angle);
             }
 
             controlledBall.detectCollisions();
         }
         else // move back to your goal
         {
-            if (controlledBall.y - controlledBall.ballRadius > Ball.EPSILON)
-            {
-                controlledBall.y -= Ball.FRICTION_FACTOR * AI_DIFFICULTY;
+            if (controlledBall.y > controlledBall.radius) {
+                controlledBall.y *= 1 - AI_DIFFICULTY;
             }
 
-            if (controlledBall.x > screenWidth / 2 + controlledBall.ballRadius)
-            {
+            if (controlledBall.x > screenWidth / 2 + controlledBall.radius) {
                 controlledBall.speed_x += -Ball.FRICTION_FACTOR * AI_DIFFICULTY;
-            }
-            else if (controlledBall.x < screenWidth / 2 - controlledBall.ballRadius)
-            {
+            } else if (controlledBall.x < screenWidth / 2 - controlledBall.radius) {
                 controlledBall.speed_x += Ball.FRICTION_FACTOR * AI_DIFFICULTY;
             }
         }

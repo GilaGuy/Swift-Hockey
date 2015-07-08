@@ -247,28 +247,28 @@ public class HockeyArenaMP extends View {
 
     protected void detectWallCollisions(final Ball b) {
         //when paddle hits left wall
-        if (b.x < 0 + b.ballRadius / 2) {
+        if (b.x < 0 + b.radius / 2) {
 
             b.speed_x = Math.abs(b.speed_x);
-            b.x = 0 + b.ballRadius / 2;
+            b.x = 0 + b.radius / 2;
 
             SFXManager.sfx_bounce(b);
 
             //when paddle hits right wall
-        } else if (b.x > getWidth() - b.ballRadius / 2) {
+        } else if (b.x > getWidth() - b.radius / 2) {
 
             b.speed_x = -Math.abs(b.speed_x);
-            b.x = getWidth() - b.ballRadius / 2;
+            b.x = getWidth() - b.radius / 2;
 
             SFXManager.sfx_bounce(b);
         }
 
         //paddle hits top wall
-        if (b.y < 0 - b.ballRadius) {
+        if (b.y < 0 - b.radius) {
 
             if (b.getType() == Ball.type.paddle) {
                 b.speed_y = Math.abs(b.speed_y);
-                b.y = 0 + b.ballRadius / 2;
+                b.y = 0 + b.radius / 2;
 
                 SFXManager.sfx_bounce(b);
             } else if (b.getType() == Ball.type.puck) {
@@ -291,19 +291,19 @@ public class HockeyArenaMP extends View {
 
 
             //paddle hits bottom wall
-        } else if (b.y > getHeight() - b.ballRadius / 2) {
+        } else if (b.y > getHeight() - b.radius / 2) {
 
             if (b.getType() == Ball.type.paddle) {
                 b.speed_y = -Math.abs(b.speed_y);
-                b.y = getHeight() - b.ballRadius / 2;
+                b.y = getHeight() - b.radius / 2;
 
                 SFXManager.sfx_bounce(b);
             } else if (b.x < getWidth() / 3 || b.x > getWidth() * 2 / 3 && b.getType() == Ball.type.puck) {
                 b.speed_y = -Math.abs(b.speed_y);
-                b.y = getHeight() - b.ballRadius / 2;
+                b.y = getHeight() - b.radius / 2;
 
                 SFXManager.sfx_bounce(b);
-            } else if (b.y > getHeight() + b.ballRadius) {
+            } else if (b.y > getHeight() + b.radius) {
                 //Goal scored
                 SFXManager.sfx_verynice();
 

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Melvin and Filip
@@ -14,8 +13,7 @@ public class Ball {
     public static float FRICTION_FACTOR = .98f;
 
     public static Point MAX_SPEED = new Point(50, 50);
-    public static float MAX_ROTATION_SPEED = 1;
-    public static float EPSILON = 0.1f;
+    public static float MAX_ROTATION_SPEED = 0.42f;
 
     public static ArrayList<Ball> balls = new ArrayList<Ball>();
 
@@ -34,8 +32,8 @@ public class Ball {
     public float angle;
     public boolean angleInitialized;
     public rotation rotationDirection;
-    public float ballRadius;
-    private Bitmap BallBitmap;
+    public float radius;
+    private Bitmap bitmap;
     private type bType;
 
     public Ball(Bitmap img, float xPos, float yPos, int rad, type t) {
@@ -46,8 +44,8 @@ public class Ball {
         angle = 0;
         angleInitialized = false;
         rotationDirection = rotation.NONE;
-        ballRadius = rad;
-        BallBitmap = img;
+        radius = rad;
+        bitmap = img;
         balls.add(this);
         bType = t;
     }
@@ -57,7 +55,7 @@ public class Ball {
     }
 
     public Bitmap getBitmap() {
-        return BallBitmap;
+        return bitmap;
     }
 
     public void update() {
@@ -70,11 +68,11 @@ public class Ball {
     public void detectCollisions() {
         for (Ball b : balls) {
             if (b != this) {
-                if (x + ballRadius + b.ballRadius > b.x
-                        && x < b.x + ballRadius + b.ballRadius
-                        && y + ballRadius + b.ballRadius > b.y
-                        && y < b.y + ballRadius + b.ballRadius) {
-                    if (distanceTo(this, b) < ballRadius + b.ballRadius) {
+                if (x + radius + b.radius > b.x
+                        && x < b.x + radius + b.radius
+                        && y + radius + b.radius > b.y
+                        && y < b.y + radius + b.radius) {
+                    if (distanceTo(this, b) < radius + b.radius) {
                         calculateNewVelocities(this, b);
                         SFXManager.sfx_bounce(b);
                     }
@@ -88,8 +86,8 @@ public class Ball {
     }
 
     public void calculateNewVelocities(Ball firstBall, Ball secondBall) {
-        float mass1 = firstBall.ballRadius;
-        float mass2 = secondBall.ballRadius;
+        float mass1 = firstBall.radius;
+        float mass2 = secondBall.radius;
         float velX1 = firstBall.speed_x;
         float velX2 = secondBall.speed_x;
         float velY1 = firstBall.speed_y;
