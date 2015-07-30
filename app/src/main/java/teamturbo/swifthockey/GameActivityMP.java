@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
@@ -196,6 +197,12 @@ public class GameActivityMP extends GameActivitySP implements
 
     }
 
+    public void displayPeers(WifiP2pDeviceList peers) {
+        for (WifiP2pDevice wd : peers.getDeviceList()) {
+            System.out.println(wd.toString());
+        }
+    }
+
     private void discoverService() {
 
         /*
@@ -264,6 +271,7 @@ public class GameActivityMP extends GameActivitySP implements
                         appendStatus("Failed adding service discovery request");
                     }
                 });
+
         manager.discoverServices(channel, new ActionListener() {
 
             @Override
@@ -368,7 +376,7 @@ public class GameActivityMP extends GameActivitySP implements
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
-        Thread handler = null;
+        Thread handler;
         /*
          * The group owner accepts connections using a server socket and then spawns a
          * client socket for every client. This is handled by {@code
